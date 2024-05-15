@@ -13,7 +13,9 @@ import {
 } from "@mui/material";
 import DocumentEditor from "@/components/documenteditor";
 import CreateDocument from "@/components/createdocument";
-
+import ButtonGroup from '@mui/material/ButtonGroup';
+import { color } from "@mui/system";
+import Divider from '@mui/material/Divider';
 export default function ProjectDetails({ projectId }) {
   const allProjectDocuments = useSelector((state) => state.auth.allDocuments);
   const [selectedDocument, setSelectedDocument] = useState(null);
@@ -52,28 +54,45 @@ export default function ProjectDetails({ projectId }) {
   return (
     <div>
       {/* Document list and + button */}
-      <div className="d-flex gap-5">
-        <button
-          className="btn btn-outline-success"
+      <div className="d-flex gap-4" >
+        <Button
+         
           type="button"
           onClick={handleOpenCreateModal}
+         
         >
-          +
-        </button>
+          Создать Документ
+        </Button>
+        
+        {/* <ButtonGroup
+            disableElevation
+            variant="contained"
+            aria-label="Disabled button group"
+          > */}
+        <Divider orientation="vertical" flexItem />
+        
+        <div >
         {allProjectDocuments.map((document, index) => (
-          <div>
-            <button
+      
+            <Button
+          
               key={document.id} // Лучше использовать уникальный id, если он доступен
               onClick={() => handleDocumentClick(document)}
-              className={`btn btn-outline-success ${
+              className={`btn btn-primary ${
                 selectedDocumentId === document.id ? "active" : ""
               }`}
             >
               {document.document_name}
-            </button>
-          </div>
+            </Button>
+            
+        
+          
         ))}
+</div>
+        
+        {/* </ButtonGroup> */}
       </div>
+      <br/>
 
       {/* Editor - Conditionally rendered */}
       {selectedDocument ? (

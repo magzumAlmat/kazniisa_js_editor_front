@@ -11,7 +11,7 @@ import leftArrow from "@/../../public/icons/arrow-left-solid.svg";
 import Image from "next/image";
 
 import dynamic from 'next/dynamic';
-
+import { useRouter } from 'next/navigation';
 const ProjectRender = dynamic(() => import('@/components/projectrender'), { ssr: false });
 const ProjectDetails = dynamic(() => import('@/components/projectdetails'), { ssr: false });
 
@@ -26,6 +26,7 @@ export default function page() {
   const [selectedProjectId, setSelectedProjectId] = useState(null);
   const [decoded, setDecoded] = useState(null);
 
+  const router=useRouter()
   console.log(decoded);
 
   const handleProjectClick = (projectId) => {
@@ -56,6 +57,10 @@ export default function page() {
     // Browser-specific code
   }
 
+  const Logout=()=>{
+    router.push('/')
+  }
+
   const handleCloseModal = () => {
     setOpenModal(false);
   };
@@ -78,8 +83,10 @@ export default function page() {
     <>
       <div className="row">
         <div className="col-2 d-flex flex-column align-items-center justify-content-between bg-light min-vh-100">
-          <h3 className="justify-content-start p-5">KazNIISA Editor v.0.1</h3>
-         <div className="justify-content-end p-5">{decoded ? decoded.email : 'Loading...'}</div>
+          <h3 className="justify-content-start p-5">KazNIISA Editor v.0.2</h3>
+          <hr/>
+         <div className="justify-content-end p-5">{decoded ? decoded.email : 'Loading...'} <button  className="btn btn-outline-danger"
+                    type="button" onClick={()=>Logout()}>Выход</button></div>
 
         </div>
         <div className="col-10">
@@ -110,7 +117,7 @@ export default function page() {
                   >
                     + Создать Проект
                   </button>
-
+                    <br/>
                   <Modal
                     open={openModal}
                     onClose={handleCloseModal}

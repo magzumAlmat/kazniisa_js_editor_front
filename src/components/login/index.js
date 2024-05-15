@@ -164,12 +164,7 @@ export default function Login() {
                     Продолжить
                   </Button>
 
-                  <Button
-                    onClick={handleClickEnterWithLoginPassword}
-                    color="primary"
-                  >
-                    Вход
-                  </Button>
+                  
                 </Col>
               </Row>
             </Form>

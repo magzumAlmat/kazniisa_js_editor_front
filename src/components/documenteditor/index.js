@@ -141,7 +141,12 @@ import {
   getDocumentByIdAction,
   updateDocumentContentAction,
 } from "@/store/slices/authSlice";
-
+import Button from '@mui/material/Button';
+import DeleteIcon from '@mui/icons-material/Delete';
+import SendIcon from '@mui/icons-material/Send';
+import Stack from '@mui/material/Stack';
+import Alert from '@mui/material/Alert';
+import CheckIcon from '@mui/icons-material/Check';
 export default function DocumentEditor({ document }) {
   const [doc, setDoc] = useState(null);
   const [content, setContent] = useState(null);
@@ -219,21 +224,43 @@ export default function DocumentEditor({ document }) {
 
   const deleteClick = () => {
     dispatch(deleteDocumentAction(currentDocument.id))
+
+  }
+
+  function SimpleAlert() {
+    return (
+      <Alert icon={<CheckIcon fontSize="inherit" />} severity="success">
+        Here is a gentle confirmation that your action was successful.
+      </Alert>
+    );
   }
 
   const handleClick = () => {
     console.log(content);
     dispatch(updateDocumentContentAction(currentDocument.id, content));
+    alert(`Данные в документе ${currentDocument.document_name    } сохранены`)
   };
   // Editor logic here
   return (
     <>
-      <div id="editorjs"></div>
-      <div className="d-flex gap-5">
-        <button className="btn btn-outline-success" onClick={handleClick}>
-          Сохранить
-        </button>
-        <button className="btn btn-outline-danger" onClick={deleteClick}>Удалить</button>
+      
+      <Stack direction="row" spacing={2} >
+      <Button variant="contained" color="success" onClick={()=>handleClick()}>
+      Сохранить
+</Button>
+      <Button variant="outlined" startIcon={<DeleteIcon />} onClick={deleteClick}>
+      Удалить
+      </Button>
+     
+    </Stack>
+
+     
+      <br />
+      <hr />
+      <div>
+      
+      <div id="editorjs" style={{ width: "100%" }}></div>
+      <hr />
       </div>
     </>
   );

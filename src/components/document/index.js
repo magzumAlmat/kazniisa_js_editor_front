@@ -220,7 +220,7 @@ export default function Document({id}) {
   return (
     <>
       <div id="editorjs"></div>
-      <button onClick={handleClick}>Save</button>
+      <button onClick={handleClick}>Сохранить</button>
     </>
   );
 }
