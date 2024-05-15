@@ -79,7 +79,7 @@ export default function page() {
       <div className="row">
         <div className="col-2 d-flex flex-column align-items-center justify-content-between bg-light min-vh-100">
           <h3 className="justify-content-start p-5">KazNIISA Editor v.0.1</h3>
-          <div className="justify-content-end p-5">{decoded ? decoded.email : 'Loading...'}</div>
+         <div className="justify-content-end p-5">{decoded ? decoded.email : 'Loading...'}</div>
 
         </div>
         <div className="col-10">
@@ -99,11 +99,10 @@ export default function page() {
                       src={leftArrow}
                     />
                   </button>
-                  <div className="d-flex align-items-center">документ</div>
+                  <div className="d-flex align-items-center">Документ</div>
                 </div>
               ) : (
                 <>
-                  
                   <button
                     className="btn btn-outline-success"
                     type="button"
