@@ -33,11 +33,18 @@
  
   .col-2.d-flex.flex-column.align-items-center.justify-content-between.bg-light.min-vh-100 {
     display: none !important;
+    
   }
 
   /* You may also want to adjust the layout of the remaining content */
   .col-10 {
     width: 100%;
+    padding-left: 8rem!important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh; /* Ensures the content is vertically centered */
+    
   }
 }
 /* :root {
