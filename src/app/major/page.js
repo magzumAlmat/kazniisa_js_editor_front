@@ -82,15 +82,15 @@ export default function page() {
   return (
     <>
       <div className="row">
-        <div className="col-2 d-flex flex-column align-items-center justify-content-between bg-light min-vh-100">
-          <h3 className="justify-content-start p-5">KazNIISA Editor v.0.2</h3>
+        <div className="col-2 d-flex flex-column align-items-center justify-content-between bg-light min-vh-100 ">
+          <h3 className="justify-content-start p-5 noprint">KazNIISA Editor v.0.2</h3>
           <hr/>
-         <div className="justify-content-end p-5">{decoded ? decoded.email : 'Loading...'} <button  className="btn btn-outline-danger"
+         <div className="justify-content-end p-5 noprint">{decoded ? decoded.email : 'Loading...'} <button  className="btn btn-outline-danger"
                     type="button" onClick={()=>Logout()}>Выход</button></div>
 
         </div>
         <div className="col-10">
-          <nav className="navbar bg-light mb-4">
+          <nav className="navbar bg-light mb-4 noprint" >
             <div className="container-fluid">
               {selectedProjectId ? (
                 <div className="d-flex gap-3">

@@ -54,9 +54,9 @@ export default function ProjectDetails({ projectId }) {
   return (
     <div>
       {/* Document list and + button */}
-      <div className="d-flex gap-4" >
+      <div className="d-flex gap-4 noprint"  >
         <Button
-         
+         className="noprint"
           type="button"
           onClick={handleOpenCreateModal}
          
@@ -78,7 +78,7 @@ export default function ProjectDetails({ projectId }) {
           
               key={document.id} // Лучше использовать уникальный id, если он доступен
               onClick={() => handleDocumentClick(document)}
-              className={`btn btn-primary ${
+              className={` noprint btn btn-primary ${
                 selectedDocumentId === document.id ? "active" : ""
               }`}
             >

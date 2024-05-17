@@ -243,24 +243,23 @@ export default function DocumentEditor({ document }) {
   // Editor logic here
   return (
     <>
-      
-      <Stack direction="row" spacing={2} >
-      <Button variant="contained" color="success" onClick={()=>handleClick()}>
-      Сохранить
-</Button>
-      <Button variant="outlined" startIcon={<DeleteIcon />} onClick={deleteClick}>
-      Удалить
-      </Button>
-     
-    </Stack>
-
+      <div  className="newGrid">
+      <Stack direction="row" spacing={2}  className="noprint">
+        <Button variant="contained" color="success" onClick={()=>handleClick()}>
+        Сохранить
+        </Button>
+        <Button variant="outlined" startIcon={<DeleteIcon />} onClick={deleteClick}>
+        Удалить
+        </Button>
+      </Stack>
+      </div>
      
       <br />
-      <hr />
-      <div>
+      <hr className="noprint" />
+      <div >
       
-      <div id="editorjs" style={{ width: "100%" }}></div>
-      <hr />
+      <div id="editorjs" className="newGrid" ></div>
+      <hr className="noprint "/>
       </div>
     </>
   );

@@ -6,6 +6,40 @@
 @import url('style/login.css');
 @import url('style/home.css');
 
+.ce-block__content{
+  max-width: 960px!important;
+}
+
+/* .ce-toolbar,*{
+  max-width: 1000px!important;
+} */
+
+.ce-toolbar__content {
+  max-width: 970px;
+  margin: 0 auto;
+  position: relative;
+}
+
+@media print {
+  #editorjs {
+    /* display: block !important; */
+    clear: both;
+  }
+  .noprint{
+    display: none !important;
+    padding: 0;
+    margin: auto;
+  }
+ 
+  .col-2.d-flex.flex-column.align-items-center.justify-content-between.bg-light.min-vh-100 {
+    display: none !important;
+  }
+
+  /* You may also want to adjust the layout of the remaining content */
+  .col-10 {
+    width: 100%;
+  }
+}
 /* :root {
   --max-width: 1100px;
   --border-radius: 12px;
