@@ -1,3 +1,4 @@
+'use client';
 import { createSlice, current } from "@reduxjs/toolkit";
 import axios from "axios";
 import END_POINT from "@/components/config/index";
@@ -1128,6 +1129,30 @@ export const getPublicDocumentByIdAction = (id) => async (dispatch) => {
   } catch (error) {
     console.error("Error fetching public document:", error);
     // dispatch an error action if needed
+  }
+};
+
+export const uploadImageAction = (file) => async (dispatch) => {
+  const token = localStorage.getItem("token");
+  if (!token) {
+    console.error("Token not available");
+    return null;
+  }
+
+  const formData = new FormData();
+  formData.append("file", file);
+
+  try {
+    const response = await axios.post(`${END_POINT}/api/upload`, formData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return response.data.file.url;
+  } catch (error) {
+    console.error("Error uploading image:", error);
+    return null;
   }
 };
 
