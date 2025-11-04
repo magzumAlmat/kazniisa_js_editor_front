@@ -9,7 +9,7 @@ const renderBlock = (block) => {
     case 'paragraph':
       return <p dangerouslySetInnerHTML={{ __html: block.data.text }} />;
     default:
-      return <p>Unsupported block type: {block.type}</p>;
+      return <p>Unsupported 1block type: {block.type}</p>;
   }
 };
 
