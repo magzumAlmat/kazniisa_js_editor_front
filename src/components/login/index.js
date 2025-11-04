@@ -88,7 +88,7 @@ export default function Login() {
   const loginWithEmailAndPassword = async () => {
     await dispatch(loginAction(email, password));
     // window.location.reload();
-    router.push("/mainpage");
+    router.push("/layout_home");
   };
 
   const loginInspectorWithEmailAndPassword = async () => {
@@ -163,8 +163,14 @@ export default function Login() {
                   <Button onClick={handleClick} color="primary">
                     Продолжить
                   </Button>
-
-                  
+                  <br/>
+                  <Button onClick={() => setStep(3)} color="primary">
+                    Войти с паролем
+                  </Button>
+                  <br/>
+                  <Button onClick={() => setStep(4)} color="primary">
+                    Войти как инспектор
+                  </Button>
                 </Col>
               </Row>
             </Form>
@@ -244,36 +250,39 @@ export default function Login() {
               <Row className="card">
                 <Col>
                   <Label>Введите email и пароль</Label>
-                  <Input
+
+                    <Input
                     id="outlined-basic"
                     variant="outlined"
                     value={email}
                     onChange={handleChangeEmail}
+                    
                     type="email"
                     pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
                     // Паттерн для валидации
                     title="Введите действительный адрес электронной почты"
                   />
+
+
                   <Input
                     id="outlined-basic"
                     variant="outlined"
                     value={password}
                     onChange={handleChangePassword}
-                    type="email"
-                    pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
-                    // Паттерн для валидации
+                    type="password"
                     title="Введите действительный пароль"
                   />
-                  <br />
-
+                </Col>
                   <Button
+                    type="button"
+                    disabled={!isInputEnabled}
                     onClick={loginWithEmailAndPassword}
                     color="primary"
-                    type="button"
                   >
-                    Войти
+                    Продолжить
                   </Button>
-                </Col>
+
+
               </Row>
             </Form>
           </Col>
@@ -310,9 +319,7 @@ export default function Login() {
                     variant="outlined"
                     value={password}
                     onChange={handleChangePassword}
-                    type="email"
-                    pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
-                    // Паттерн для валидации
+                    type="password"
                     title="Введите действительный пароль"
                   />
                   <br />

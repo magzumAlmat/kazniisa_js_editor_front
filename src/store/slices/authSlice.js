@@ -20,7 +20,7 @@ const initialState = {
   uploadProgress: 0,
   allProjects: [],
   allDocuments: [],
-  currentDocument: {},
+  currentDocument: null,
   currentDocId: null,
   currentProjId: null,
   allTemplates: [],
@@ -547,8 +547,8 @@ export const loginAction = (email, password) => async (dispatch) => {
 export const sendCodeToEmailAction = (email) => async (dispatch) => {
   // axios.defaults.headers.common['Authorization'] = `Bearer ${action.payload.token}`;
 
-  // console.log('auth user start')
-  // console.log('1 AutheUser запустился ', email, password);
+  console.log('auth user start')
+  console.log('1 AutheUser запустился ', email, password);
 
   await axios
     .post(`${END_POINT}/api/auth/sendmail`, {
@@ -1109,6 +1109,26 @@ export const logoutAction = () => (dispatch) => {
   // console.log('logoutAction started/');
 
   dispatch(logout());
+};
+
+export const getAllPublicDocumentsAction = () => async (dispatch) => {
+  try {
+    const response = await axios.get(`${END_POINT}/api/documents/public`);
+    dispatch(getAllProjectDocumentsReducer(response.data));
+  } catch (error) {
+    console.error("Error fetching public documents:", error);
+    // dispatch an error action if needed
+  }
+};
+
+export const getPublicDocumentByIdAction = (id) => async (dispatch) => {
+  try {
+    const response = await axios.get(`${END_POINT}/api/documents/public/${id}`);
+    dispatch(getDocumentByIdReducer(response.data));
+  } catch (error) {
+    console.error("Error fetching public document:", error);
+    // dispatch an error action if needed
+  }
 };
 
 export default authSlice.reducer;

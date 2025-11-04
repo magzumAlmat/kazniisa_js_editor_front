@@ -1,21 +1,20 @@
-import React, { useEffect, useState } from "react";
-import UserProjects from "../userprojects";
+'use client';
+import React from "react";
+import { useRouter } from "next/navigation";
 
 export default function Layout1() {
+  const router = useRouter();
+    const goToMajor = async () => {
+      // await dispatch(loginAction(email, password));
+      // window.location.reload();
+      router.push("/major");
+    };
+  
+
   return (
     <div className="layout__box">
-      <div className="layout__left">
-        <div className="layout__left-top">
-          <button>Projects</button>
-        </div>
-        <div className="layout__left-bot">
-          <button>Account</button>
-        </div>
-      </div>
-      <div className="layout__right">
-        <div className="layout__right-header"></div>
-        <div className="layout__right-body"></div>
-      </div>
+     <button onClick={goToMajor}>click</button>
+       <button onClick={() => router.push("/news")}>Просмотр новостей</button>
     </div>
   );
 }
