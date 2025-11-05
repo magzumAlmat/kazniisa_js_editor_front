@@ -55,12 +55,13 @@ export default function Main() {
 
 
   return (
-    <Container maxWidth="lg" sx={{ flexGrow: 1, py: 4 }}>
+    <div>
       <br />
        <br />
         <br />
+        <br />
       <Hero />
-<NewsBlog />
+      <NewsBlog />
       {/* <Footer />   */}
       {/* <Brands /> */}
       {/* <Feature /> */}
@@ -74,7 +75,7 @@ export default function Main() {
       <Pricing />
       <Contact />
       <Blog /> */}
-</Container>
+</div>
 
   );
 }
