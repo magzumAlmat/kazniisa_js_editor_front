@@ -1,9 +1,9 @@
 'use client'
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getDocumentByIdAction, getNewsByIdAction } from '@/store/slices/authSlice';
+import { getDocumentByIdAction } from '@/store/slices/authSlice';
 import NewsViewer from '@/components/newsviewer';
-import Header from "@/components/header";
+import Header from "@/components/Header";
 
 export default function NewsArticlePage({ params }) {
   const dispatch = useDispatch();

@@ -1,7 +1,7 @@
 
 'use client' 
 import UserLogin from "@/components/login"
-import Header from "@/components/header"
+import Header from "@/components/headerold"
 import AddProfileData from "@/components/addprofiledata"
 import {
     Collapse,

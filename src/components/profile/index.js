@@ -17,7 +17,7 @@ import {
 import React, { useState ,useEffect} from 'react';
 import { useSelector,useDispatch } from 'react-redux'
 
-import Header from '../header';
+import Header from '../headerold';
 import { authorize, getAllCompanies, getUserInfo } from '@/store/slices/authSlice';
 import jwtDecode from 'jwt-decode'
 import Link from "next/link";

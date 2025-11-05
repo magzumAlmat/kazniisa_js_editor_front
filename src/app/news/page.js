@@ -1,6 +1,6 @@
 'use client'
 import NewsList from "@/components/newslist";
-import Header from "@/components/header";
+import Header from "@/components/Header";
 
 export default function NewsPage() {
   return (

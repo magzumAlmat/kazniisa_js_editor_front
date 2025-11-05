@@ -1,23 +1,15 @@
 'use client' 
-import UserLogin from "@/components/login"
-import Header from "@/components/header"
-import Home from "@/components/home"
-import Profile from "@/components/profile"
-import jwtDecode from 'jwt-decode'
-import { useSelector,useDispatch } from 'react-redux'
-import { useEffect } from 'react'
-import { authorize } from '@/store/slices/authSlice'
+import Header from "@/components/Header";
 import ReviseDashboard from "@/components/reviseDashboard"
-import InspectorDashboard from "@/components/inspectorDashboard"
 import { useRouter } from "next/navigation"
 import { useSearchParams } from 'next/navigation'
-export default function Revise(user) {
+export default function Revise() {
     const router= useRouter()
     const searchParams = useSearchParams()
-    const bannerId = searchParams.get('bannderId')
+    const bannerId = searchParams.get('bannerId')
     console.log('bannnerID===',bannerId)
 
-    const dispatch = useDispatch(user);
+    const dispatch = useDispatch();
     // useEffect(()=>{
       
     //     console.log('Use effect сработал при рефреше страницы')

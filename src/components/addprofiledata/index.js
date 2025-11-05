@@ -32,7 +32,7 @@ import {
     FormGroup
 
 } from 'reactstrap';
-import Header from '../header';
+import Header from '../headerold';
 import Link from 'next/link';
 
 const AddProfileData = () => {

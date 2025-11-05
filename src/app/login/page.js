@@ -1,6 +1,6 @@
 'use client'
-import UserLogin from "@/components/login"
-import Header from "@/components/header"
+import UserLogin from "../../components/login"
+
 export default function Login() {
   return (
     <main>  

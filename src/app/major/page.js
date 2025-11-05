@@ -5,6 +5,7 @@ import {
   getAllUserProjectsAction,
   addProjectAction,
   getAllAdminTemplateAction,
+  logout,
 } from "@/store/slices/authSlice";
 import { Modal, Box, TextField, Button, Typography } from "@mui/material";
 import leftArrow from "@/../../public/icons/arrow-left-solid.svg";
@@ -58,6 +59,7 @@ export default function page() {
   }
 
   const Logout=()=>{
+    dispatch(logout());
     router.push('/')
   }
 

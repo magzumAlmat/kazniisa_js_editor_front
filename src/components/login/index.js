@@ -6,13 +6,14 @@ import { Button, TextField } from "@mui/material";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
-import { loginInspectorAction, sendMail } from "@/store/slices/authSlice";
+import { loginInspectorAction } from "../../store/slices/authSlice";
 import {
   sendCodeToEmailAction,
   verifyCodeAction,
-} from "@/store/slices/authSlice";
+} from "../../store/slices/authSlice";
 import { Form, Row, Col, Label, Input, FormGroup } from "reactstrap";
-import { loginAction } from "@/store/slices/authSlice";
+import { loginAction } from "../../store/slices/authSlice";
+
 export default function Login() {
   const dispatch = useDispatch();
   const [isWaiting, setIsWaiting] = useState(false);
@@ -63,8 +64,8 @@ export default function Login() {
 
   const handleCodeSubmit = (e) => {
     e.preventDefault();
-    const lastFour = someVar.slice(-4);
-    console.log("code=", code, "somevar", lastFour);
+    const lastFour = token.code;
+    console.log("code=", code, "token.code", lastFour);
 
     if (code == lastFour) {
       setInputEnabled(true); // Разрешить ввод
@@ -338,91 +339,6 @@ export default function Login() {
         </Row>
       )}
 
-      {/* <main>
-
-                <CssBaseline/> {
-                step === 1 && <Container fixed>
-                    <div className='formRegister'>
-                        <div className="loginForm">
-                            <div className="card">
-                                <div>
-                                    <form action="">
-                                        <br/>
-                                        <Typography variant="h6" gutterBottom className='center'>
-                                            Введите свой Email
-                                        </Typography>
-
-                                        <div></div>
-                                        <br/>
-                                        <div spacing={2}>
-                                            <TextField id="outlined-basic" variant="outlined" fullWidth
-                                                value={email}
-                                                onChange={handleChangeEmail}
-                                                type="email"
-                                                pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
-                                                // Паттерн для валидации
-                                                title="Введите действительный адрес электронной почты"
-                                            />
-                                            <br/>
-                                            <Button variant="contained"
-                                                onClick={handleClick}>Продолжить</Button>
-                                            <br/>
-                                                <p></p>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-                    </Container>
-            }
-                {
-                step === 2 && <Container fixed>
-
-                    <div className='formRegister'>
-                        <div className="loginForm">
-                            <div className="card">
-                                <div>
-                                    <br/>
-                                    <div className='padding10px'>
-                                        <Typography variant="h6" gutterBottom className='center'>Отправили код на {email}</Typography>
-                                    </div>
-                                    <div className='padding10px'>
-                                        <Typography variant="h6" gutterBottom className='center'>Введите код чтобы подтвердить что это вы, а не кто-то другой</Typography>
-                                    </div>
-                                    <form action="">
-                                        <br/>
-                                        <div className='padding10px'>
-                                            <TextField id="outlined-basic" variant="outlined" placeholder='Введите код' size="small" className='clearStyles'
-                                                disabled={
-                                                    !isInputEnabled
-                                                }
-                                                value={code}
-                                                onChange={handleInputChange}/>
-                                        </div>
-                                        {
-                                        isWrongCode && <p>Неверный код. Попробуйте {minutes}:{
-                                            seconds < 10 ? `0${seconds}` : seconds
-                                        }</p>
-                                    }
-                                        <br/>
-                                        <Button variant="contained"
-                                            disabled={
-                                                !isInputEnabled
-                                            }
-                                            onClick={handleCodeSubmit}>
-                                            Продолжить
-                                        </Button>
-                                        <br/>
-                                            <p></p>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </Container>
-            } </main> */}
     </>
   );
 }

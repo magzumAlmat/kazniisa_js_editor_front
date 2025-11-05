@@ -23,7 +23,7 @@ export default function UserProjects() {
       dispatch(getAllUserProjectsAction());
       console.log(allUserProjects);
     
-  }, [dispatch, currentProjId]);
+  }, [dispatch]);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -58,12 +58,6 @@ export default function UserProjects() {
         </div>
       ))}
       {currentProjId && <Documents id={currentProjId}/>}
-      {currentProjId !== null ? (
-              <h1>не null</h1>
-
-            ) : (
-              <h1>null</h1>
-            )}
     </>
   );
 }

@@ -1,26 +1,14 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getAllBanners,
-  getAllCompanies,
-  getBannerByCompanyIdAction,
-  getUserInfo,
+  getAllRevises,
+  addReviseForBannerAction,
 } from "@/store/slices/authSlice";
-import jwtDecode from "jwt-decode";
-import Link from "next/link";
-import { addCompanyAction } from "@/store/slices/authSlice";
-import { Container,Row,Col } from "reactstrap";
-import { addReviseForBannerAction } from "@/store/slices/authSlice";
-import { useRef } from "react";
-export default function ReviseDashboard(bannderId) {
-  console.log('0 banerID=',bannderId)
+import { Container, Row, Col, Input } from "reactstrap";
+export default function ReviseDashboard({ bannerId }) {
+  console.log('0 banerID=',bannerId)
   const host = "http://localhost:8000";
-  const token = localStorage.getItem("token");
-  const TOKEN = useSelector((state) => state.auth.authToken);
-  const CurrentCompany = useSelector((state) => state.auth.currentCompany);
-  let decodedToken = jwtDecode(token);
-  console.log("1 decoded token from home", decodedToken);
-  const CompanyId = decodedToken.companyId;
   const dispatch = useDispatch();
   const banners = useSelector((state) => state.auth.allBanners);
   const companies = useSelector((state) => state.auth.allCompanies);
@@ -30,15 +18,11 @@ export default function ReviseDashboard(bannderId) {
   const [selectedFile, setSelectedFile] = useState(null);
   const inputRef = useRef(null);
 
-  const [bannersState, setBannersState] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [selectedCompany, setSelectedCompany] = useState(""); // New state for selected company
-  const [searchQuery, setSearchQuery] = useState(""); // New state for search query
-
   useEffect(() => {
+    const token = localStorage.getItem("token");
     dispatch(getAllCompanies());
     dispatch(getAllBanners());
-  }, []);
+  }, [dispatch]);
 
   const pageNumbers = [];
   for (let i = 1; i <= Math.ceil(bannersArray.length / itemsPerPage); i++) {

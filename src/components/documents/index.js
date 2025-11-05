@@ -1,12 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  getAllProjectDocumentsAction,
-  getAllUserProjectsAction,
-  getBannerByCompanyIdAction,
-  getUserInfo,
-} from "@/store/slices/authSlice";
-import jwtDecode from "jwt-decode";
+import { getAllProjectDocumentsAction } from "@/store/slices/authSlice";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Document from "@/components/document"
@@ -20,7 +14,7 @@ import {
   TableCell,
 } from "@mui/material";
 
-export default function Documents(id) {
+export default function Documents({ id }) {
   const allProjectDocuments = useSelector((state) => state.auth.allDocuments);
   const [documents, setDocuments] = useState([]);
   const [isClicked, setIsClicked] = useState(false);
@@ -30,9 +24,9 @@ export default function Documents(id) {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getAllProjectDocumentsAction(id.id));
+    dispatch(getAllProjectDocumentsAction(id));
     console.log(allProjectDocuments)
-  }, [dispatch]);
+  }, [dispatch, id]);
 
   useEffect(() => {
     setDocuments(allProjectDocuments);
@@ -60,11 +54,11 @@ export default function Documents(id) {
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell classname="mobile__fs_10">Номер</TableCell>
-                  <TableCell classname="mobile__fs_10">
+                  <TableCell className="mobile__fs_10">Номер</TableCell>
+                  <TableCell className="mobile__fs_10">
                     Название документа
                   </TableCell>
-                  <TableCell classname="mobile__fs_10">Действие</TableCell>
+                  <TableCell className="mobile__fs_10">Действие</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>

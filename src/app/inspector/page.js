@@ -1,15 +1,8 @@
 'use client' 
-import UserLogin from "@/components/login"
-import Header from "@/components/header"
-import Home from "@/components/home"
-import Profile from "@/components/profile"
-import jwtDecode from 'jwt-decode'
-import { useSelector,useDispatch } from 'react-redux'
-import { useEffect } from 'react'
-import { authorize } from '@/store/slices/authSlice'
+import Header from "@/components/Header";
 import InspectorDashboard from "@/components/inspectorDashboard"
-export default function Layout(user) {
-    const dispatch = useDispatch(user);
+export default function Layout() {
+    const dispatch = useDispatch();
     // useEffect(()=>{
       
     //     console.log('Use effect сработал при рефреше страницы')

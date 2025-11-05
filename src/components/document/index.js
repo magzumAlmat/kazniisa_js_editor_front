@@ -136,32 +136,33 @@ const DEFAULT_INITIAL_DATA = {
 
 
 export default function Document({id}) {
-  const [document, setDocument] = useState(null);
   const [content, setContent] = useState(null);
-  const idDoc = id;
   const ejInstance = useRef(null);
   const currentDocument = useSelector((state) => state.auth.currentDocument);
   const dispatch = useDispatch();
 
-  
+  useEffect(() => {
+    dispatch(getDocumentByIdAction(id));
+  }, [dispatch, id]);
 
   useEffect(() => {
-    dispatch(getDocumentByIdAction(idDoc));
-  }, [dispatch]);
-
-  useEffect(() => {
-    setDocument(currentDocument);
-    if (document != null && ejInstance.current === null) {
-      initEditor();
-      
+    if (currentDocument && ejInstance.current === null) {
+      initEditor(currentDocument.document_content);
     }
+
+    return () => {
+      if (ejInstance.current) {
+        ejInstance.current.destroy();
+        ejInstance.current = null;
+      }
+    };
   }, [currentDocument]);
 
-  const initEditor = () => {
+  const initEditor = (data) => {
     const editor = new EditorJS({
       holder: "editorjs",
       autofocus: true,
-      data: currentDocument.document_content,
+      data: data || DEFAULT_INITIAL_DATA,
       onChange: async () => {
         let updatedContent = await editor.saver.save();
         console.log(updatedContent);

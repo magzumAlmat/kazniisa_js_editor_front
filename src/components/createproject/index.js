@@ -11,26 +11,7 @@ import {
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-import {
-  Collapse,
-  Navbar,
-  NavbarToggler,
-  NavbarBrand,
-  Nav,
-  NavItem,
-  NavLink,
-  UncontrolledDropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
-  NavbarText,
-  Form,
-  Row,
-  Col,
-  Label,
-  Input,
-  FormGroup,
-} from "reactstrap";
+import { Form, Row, Col, Label } from "reactstrap";
 import { addProjectAction } from "@/store/slices/authSlice";
 import { useRouter } from "next/navigation";
 
@@ -58,20 +39,22 @@ export default function AddProject() {
   };
 
   const handleSubmit = async () => {
-    // Проверка наличия всех обязательных полей перед отправкой
-
     if (!projectName) {
       setError("Пожалуйста, заполните обязательное поле.");
       return;
     }
 
-    // Сброс ошибки и отправка данных
     setServerError("");
-    console.log("serverErrpr after handleSubmit", serverError);
     setError("");
-    await dispatch(addProjectAction(projectName));
-    setSuccess(true);
-    router.push("/projects");
+
+    try {
+      await dispatch(addProjectAction(projectName));
+      setSuccess(true);
+      router.push("/projects");
+    } catch (err) {
+      setServerError("Ошибка при создании проекта.");
+      console.error("Error creating project:", err);
+    }
   };
 
   return (
@@ -88,13 +71,16 @@ export default function AddProject() {
           <Row className="card">
             <Col>
               <form action="" method="POST">
-                <Input
+                <TextField
                   label="Project name"
                   name="projectName"
                   type="text"
                   value={projectName}
                   onChange={handleChange}
                   placeholder="Введите название проекта"
+                  fullWidth
+                  margin="normal"
+                  variant="outlined"
                 />
 
                 {error && <Typography color="error">{error}</Typography>}

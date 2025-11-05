@@ -42,7 +42,7 @@ import {
   Input,
   FormGroup,
 } from 'reactstrap';
-import Header from '../header';
+import Header from '../headerold';
 import Link from 'next/link';
 import { useRef } from 'react';
 import { addCompanyAction } from '@/store/slices/authSlice';

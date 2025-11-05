@@ -1,7 +1,7 @@
 'use client';
 import { createSlice, current } from "@reduxjs/toolkit";
 import axios from "axios";
-import END_POINT from "@/components/config/index";
+import END_POINT from "../../components/config/index";
 import jwt_decode from "jwt-decode";
 import { useEffect } from "react";
 
@@ -294,8 +294,10 @@ export const authSlice = createSlice({
       state.currentDocument = action.payload;
     },
     updateDocumentContentReducer: (state, action) => {
-      state.currentDocument = [...state.currentDocument, action.payload];
-      state.allDocuments = [...state.allDocuments, action.payload];
+      state.currentDocument = action.payload;
+      state.allDocuments = state.allDocuments.map((doc) =>
+        doc.id === action.payload.id ? action.payload : doc
+      );
     },
     setCurrentDocIdReducer: (state, action) => {
       state.currentDocId = action.payload;
@@ -387,6 +389,7 @@ export const {
 
 export const getAllRevises = () => async (dispatch) => {
   console.log("1 getAllRevises started");
+  const token = localStorage.getItem("token");
 
   const response = await axios
     .get(`${END_POINT}/api/revise/getallrevises`, {
@@ -402,7 +405,8 @@ export const getAllRevises = () => async (dispatch) => {
 };
 
 export const getAllCompanies = () => async (dispatch) => {
-  console.log("1 getAllBanner started", token);
+  console.log("1 getAllBanner started");
+  const token = localStorage.getItem("token");
 
   const response = await axios
     .get(`${END_POINT}/api/auth/getallcompanies`, {
@@ -419,6 +423,7 @@ export const getAllCompanies = () => async (dispatch) => {
 
 export const getAllBanners = () => async (dispatch) => {
   console.log("1 getAllBanner started");
+  const token = localStorage.getItem("token");
 
   const response = await axios
     .get(`${END_POINT}/api/banner/getall`, {
@@ -436,6 +441,7 @@ export const getAllBanners = () => async (dispatch) => {
 export const getBannerByCompanyIdAction = (companyId) => async (dispatch) => {
   console.log("1 getBannerByCompanyId started");
   console.log("1.1 COMPANYID======", companyId);
+  const token = localStorage.getItem("token");
   const response = await axios
     .get(`${END_POINT}/api/banner/getbycompanyid/${companyId}`, {
       headers: {
@@ -451,6 +457,7 @@ export const getBannerByCompanyIdAction = (companyId) => async (dispatch) => {
 
 export const getUserInfo = async (dispatch) => {
   console.log("1 getUserInFo started");
+  const token = localStorage.getItem("token");
   const response = await axios
     .get(`${END_POINT}/api/auth/getAuthentificatedUserInfo`, {
       headers: {
@@ -727,7 +734,7 @@ export const addFullProfileDataAction =
       );
       const response = await axios.post(
         `${END_POINT}/api/auth/addfullprofile`,
-        data.password,
+        data,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -1024,7 +1031,7 @@ export const addCompanyAction =
       );
       const response = await axios.post(
         `${END_POINT}/api/auth/createcompany`,
-        data.name,
+        data,
         {
           headers: {
             Authorization: `Bearer ${token}`,
