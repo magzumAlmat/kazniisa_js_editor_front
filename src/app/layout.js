@@ -83,7 +83,7 @@ export default function RootLayout({ children }) {
           defaultTheme="light"
         >
       <Providers>
-              <Lines />
+              {/* <Lines /> */}
               <Header />
               <main
                 style={{

@@ -1,105 +1,446 @@
-"use client";
-import Image from "next/image";
-import { useState } from "react";
+// components/Hero.js
+'use client';
 
-const Hero = () => {
-  const [email, setEmail] = useState("");
+import { useState, useEffect } from 'react';
+import {
+  Box, Container, Typography, Button, Stack, Grid, Card, CardContent,
+  IconButton, Paper, Chip, useTheme, alpha
+} from '@mui/material';
+import {
+  ChevronLeft, ChevronRight, PlayArrow, VolumeUp,
+  LocalHospital, AccessTime, PeopleAlt
+} from '@mui/icons-material';
+import Link from 'next/link';
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-  };
+export default function Hero() {
+  const theme = useTheme();
+  const [slide, setSlide] = useState(0);
+
+  const slides = [
+    {
+      title: "Современное оборудование позволяет проводить максимально точные исследования.",
+      text: "Подробнее о наших специалистах и технике...",
+    },
+    {
+      title: "Клинико-лабораторные исследования",
+      text: "Химические, микроскопические и другие исследования крови, выделений и патологических веществ.",
+    },
+    {
+      title: "Лапароскопия – минимально инвазивная хирургия",
+      text: "Операции через точечные проколы без широких разрезов.",
+    },
+    {
+      title: "Ортохирургия и механотерапия",
+      text: "Реабилитация начинается на 1-й день после операции.",
+    },
+    {
+      title: "Цифровая энциклопедия о Казахстане",
+      text: "Доступ к медицинским знаниям и стандартам.",
+    }
+  ];
+
+  const services = [
+    {
+      title: "Приемный покой",
+      text: "В круглосуточном режиме врачи ведут прием ургентных больных.",
+      icon: <LocalHospital fontSize="large" />,
+    },
+    {
+      title: "Отделение плановой хирургии",
+      text: "Центр гепатопанкреатобилиарной хирургии",
+      icon: <AccessTime fontSize="large" />,
+    },
+    {
+      title: "Урологическое отделение",
+      text: "Полный спектр урологических операций",
+      icon: <PeopleAlt fontSize="large" />,
+    }
+  ];
+
+  // Автопрокрутка
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setSlide((prev) => (prev + 1) % slides.length);
+    }, 7000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const nextSlide = () => setSlide((s) => (s + 1) % slides.length);
+  const prevSlide = () => setSlide((s) => (s - 1 + slides.length) % slides.length);
 
   return (
-    <>
-      <section className="overflow-hidden pb-20 pt-35 md:pt-40 xl:pb-25 xl:pt-46">
-        <div className="mx-auto max-w-c-1390 px-4 md:px-8 2xl:px-0">
-          <div className="flex lg:items-center lg:gap-8 xl:gap-32.5">
-            <div className=" md:w-1/2">
-              <h4 className="mb-4.5 text-lg font-medium text-black dark:text-white">
-                🔥 Solid - A Complete SaaS Web Template
-              </h4>
-              <h1 className="mb-5 pr-16 text-3xl font-bold text-black dark:text-white xl:text-hero ">
-                Free Next.js Template for {"   "}
-                <span className="relative inline-block before:absolute before:bottom-2.5 before:left-0 before:-z-1 before:h-3 before:w-full before:bg-titlebg dark:before:bg-titlebgdark ">
-                  SaaS
-                </span>
-              </h1>
-              <p>
-                Solid Pro - Packed with all the key integrations you need for
-                swift SaaS startup launch, including - Auth, Database, Sanity
-                Blog, Essential Components, Pages and More. Built-winth -
-                Next.js 13, React 18 and TypeScript.
-              </p>
+    <Box component="section" sx={{ bgcolor: 'grey.50', pb: 10 }}>
+      <Container maxWidth="lg">
 
-              <div className="mt-10">
-                <form onSubmit={handleSubmit}>
-                  <div className="flex flex-wrap gap-5">
-                    <input
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      type="text"
-                      placeholder="Enter your email address"
-                      className="rounded-full border border-stroke px-6 py-2.5 shadow-solid-2 focus:border-primary focus:outline-hidden dark:border-strokedark dark:bg-black dark:shadow-none dark:focus:border-primary"
-                    />
-                    <button
-                      aria-label="get started button"
-                      className="flex rounded-full bg-black px-7.5 py-2.5 text-white duration-300 ease-in-out hover:bg-blackho dark:bg-btndark dark:hover:bg-blackho"
-                    >
-                      Get Started
-                    </button>
-                  </div>
-                </form>
+        {/* === СЛАЙДЕР С ЗАГЛУШКОЙ === */}
+        <Paper
+          elevation={4}
+          sx={{
+            borderRadius: 3,
+            overflow: 'hidden',
+            mb: 8,
+            position: 'relative',
+            height: { xs: 360, md: 520 },
+            bgcolor: 'grey.300',
+          }}
+        >
+          {/* ЗАГЛУШКА */}
+          <Box
+            sx={{
+              position: 'absolute',
+              inset: 0,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: 'grey.600',
+              bgcolor: 'grey.200',
+            }}
+          >
+            <LocalHospital sx={{ fontSize: 80, mb: 2, opacity: 0.3 }} />
+            <Typography variant="h6" sx={{ fontWeight: 500 }}>
+              Слайд {slide + 1}
+            </Typography>
+            <Typography variant="body2" sx={{ opacity: 0.7 }}>
+              Заглушка изображения
+            </Typography>
+          </Box>
 
-                <p className="mt-5 text-black dark:text-white">
-                  Try for free no credit card required.
-                </p>
-              </div>
-            </div>
+          {/* Тёмный градиент + текст */}
+          <Box
+            sx={{
+              position: 'absolute',
+              inset: 0,
+              bgcolor: 'linear-gradient(90deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.5) 50%, rgba(0,0,0,0.2) 100%)',
+              display: 'flex',
+              alignItems: 'center',
+              p: { xs: 3, md: 6 },
+            }}
+          >
+            <Box sx={{ color: 'white', maxWidth: 700 }}>
+              <Typography
+                variant="h4"
+                component="h2"
+                sx={{
+                  fontWeight: 700,
+                  mb: 2,
+                  fontSize: { xs: '1.8rem', md: '2.5rem' },
+                  lineHeight: 1.2,
+                }}
+              >
+                {slides[slide].title}
+              </Typography>
+              <Typography variant="body1" sx={{ mb: 4, opacity: 0.95 }}>
+                {slides[slide].text}
+              </Typography>
 
-            <div className="animate_right hidden md:w-1/2 lg:block">
-              <div className="relative 2xl:-mr-7.5">
-                <Image
-                  src="/images/shape/shape-01.png"
-                  alt="shape"
-                  width={46}
-                  height={246}
-                  className="absolute -left-11.5 top-0"
-                />
-                <Image
-                  src="/images/shape/shape-02.svg"
-                  alt="shape"
-                  width={36.9}
-                  height={36.7}
-                  className="absolute bottom-0 right-0 z-10"
-                />
-                <Image
-                  src="/images/shape/shape-03.svg"
-                  alt="shape"
-                  width={21.64}
-                  height={21.66}
-                  className="absolute -right-6.5 bottom-0 z-1"
-                />
-                <div className=" relative aspect-700/444 w-full">
-                  <Image
-                    className="shadow-solid-l dark:hidden"
-                    src="/images/hero/hero-light.svg"
-                    alt="Hero"
-                    fill
-                  />
-                  <Image
-                    className="hidden shadow-solid-l dark:block"
-                    src="/images/hero/hero-dark.svg"
-                    alt="Hero"
-                    fill
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-    </>
+              <Button
+                component={Link}
+                href="/zapis-na-priem"
+                variant="contained"
+                size="large"
+                startIcon={<LocalHospital />}
+                sx={{
+                  bgcolor: 'linear-gradient(135deg, #006bff 0%, #0056cc 100%)',
+                  color: 'white',
+                  px: 5,
+                  py: 1.8,
+                  borderRadius: 2,
+                  fontWeight: 700,
+                  fontSize: '1.1rem',
+                  textTransform: 'none',
+                  boxShadow: '0 8px 25px rgba(0, 107, 255, 0.3)',
+                  transition: 'all 0.3s ease',
+                  '&:hover': {
+                    bgcolor: 'linear-gradient(135deg, #0056cc 0%, #004099 100%)',
+                    boxShadow: '0 12px 30px rgba(0, 107, 255, 0.4)',
+                    transform: 'translateY(-3px)',
+                  },
+                }}
+              >
+                Записаться на приём
+              </Button>
+            </Box>
+          </Box>
+
+          {/* Стрелки */}
+          <IconButton
+            onClick={prevSlide}
+            sx={{
+              position: 'absolute',
+              left: 16,
+              top: '50%',
+              transform: 'translateY(-50%)',
+              bgcolor: 'rgba(255,255,255,0.9)',
+              '&:hover': { bgcolor: 'white' },
+            }}
+          >
+            <ChevronLeft />
+          </IconButton>
+          <IconButton
+            onClick={nextSlide}
+            sx={{
+              position: 'absolute',
+              right: 16,
+              top: '50%',
+              transform: 'translateY(-50%)',
+              bgcolor: 'rgba(255,255,255,0.9)',
+              '&:hover': { bgcolor: 'white' },
+            }}
+          >
+            <ChevronRight />
+          </IconButton>
+
+          {/* Точки */}
+          <Stack
+            direction="row"
+            spacing={1}
+            sx={{
+              position: 'absolute',
+              bottom: 24,
+              left: '50%',
+              transform: 'translateX(-50%)',
+            }}
+          >
+            {slides.map((_, i) => (
+              <Box
+                key={i}
+                onClick={() => setSlide(i)}
+                sx={{
+                  width: i === slide ? 32 : 10,
+                  height: 10,
+                  borderRadius: 5,
+                  bgcolor: i === slide ? 'white' : 'rgba(255,255,255,0.5)',
+                  cursor: 'pointer',
+                  transition: 'width 0.3s ease',
+                }}
+              />
+            ))}
+          </Stack>
+        </Paper>
+
+        {/* === ГОРИЗОНТАЛЬНОЕ МЕНЮ === */}
+        <Paper
+          elevation={0}
+          sx={{
+            borderRadius: 2,
+            overflow: 'hidden',
+            mb: 8,
+            bgcolor: 'primary.main',
+            color: 'white',
+          }}
+        >
+          <Grid container>
+            {[
+              {
+                icon: <LocalHospital sx={{ fontSize: 32 }} />,
+                title: "Прикрепление к поликлинике",
+                href: "/pacientam/prikreplenie",
+              },
+              {
+                icon: <AccessTime sx={{ fontSize: 32 }} />,
+                title: "Запись на прием к врачу",
+                href: "/zapis-na-priem",
+              },
+              {
+                icon: <PeopleAlt sx={{ fontSize: 32 }} />,
+                title: "Вызов врача на дом",
+                href: "/pacientam/vyzov-vracha",
+              },
+              {
+                icon: <VolumeUp sx={{ fontSize: 32 }} />,
+                title: "Заказать рецепт онлайн",
+                href: "/pacientam/retsept",
+              },
+            ].map((item, i) => (
+              <Grid
+                item
+                xs={6}
+                sm={3}
+                key={i}
+                component={Link}
+                href={item.href}
+                sx={{
+                  textDecoration: 'none',
+                  color: 'inherit',
+                  p: { xs: 2, sm: 3 },
+                  textAlign: 'center',
+                  borderRight: i < 3 ? '1px solid' : 'none',
+                  borderRightColor: 'rgba(255,255,255,0.2)',
+                  bgcolor: i % 2 === 0 ? 'primary.dark' : 'primary.main',
+                  transition: 'all 0.2s ease',
+                  '&:hover': {
+                    bgcolor: 'primary.dark',
+                    transform: 'translateY(-2px)',
+                  },
+                }}
+              >
+                <Box sx={{ mb: 1 }}>{item.icon}</Box>
+                <Typography
+                  variant="body2"
+                  sx={{
+                    fontWeight: 500,
+                    fontSize: { xs: '0.85rem', sm: '1rem' },
+                    lineHeight: 1.3,
+                  }}
+                >
+                  {item.title}
+                </Typography>
+              </Grid>
+            ))}
+          </Grid>
+        </Paper>
+
+        {/* === УСЛУГИ === */}
+        <Typography variant="h4" sx={{ mb: 5, fontWeight: 700, textAlign: 'center', color: 'text.primary' }}>
+          Наши услуги
+        </Typography>
+        <Grid container spacing={4} sx={{ mb: 8 }}>
+          {services.map((service, i) => (
+            <Grid item xs={12} md={4} key={i}>
+              <Card
+                elevation={0}
+                sx={{
+                  height: '100%',
+                  border: '1px solid',
+                  borderColor: 'grey.200',
+                  borderRadius: 3,
+                  transition: 'all 0.3s ease',
+                  '&:hover': {
+                    borderColor: 'primary.main',
+                    boxShadow: '0 8px 25px rgba(0,0,0,0.08)',
+                  },
+                }}
+              >
+                <CardContent sx={{ p: 4, textAlign: 'center' }}>
+                  <Box sx={{ color: 'primary.main', mb: 3 }}>
+                    {service.icon}
+                  </Box>
+                  <Typography variant="h6" sx={{ fontWeight: 600, mb: 2 }}>
+                    {service.title}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    {service.text}
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Grid>
+          ))}
+        </Grid>
+
+        {/* === ЖЕСТОВЫЙ ЯЗЫК === */}
+        <Paper
+          elevation={0}
+          sx={{
+            border: '1px solid',
+            borderColor: 'grey.200',
+            borderRadius: 3,
+            p: { xs: 4, md: 5 },
+            mb: 8,
+            bgcolor: 'primary.50',
+          }}
+        >
+          <Grid container spacing={4} alignItems="center">
+            <Grid item xs={12} md={8}>
+              <Chip label="Доступность" size="small" color="primary" sx={{ mb: 2 }} />
+              <Typography variant="h5" sx={{ fontWeight: 600, mb: 2 }}>
+                Онлайн-услуга жестового языка
+              </Typography>
+              <Typography variant="body1" color="text.secondary">
+                Больница была построена в 1991 году как медицинское учреждение на случай... 
+                Услуга доступна для пациентов с нарушениями слуха.
+              </Typography>
+            </Grid>
+            <Grid item xs={12} md={4} sx={{ textAlign: { xs: 'center', md: 'right' } }}>
+              <Button
+                variant="contained"
+                size="large"
+                startIcon={<VolumeUp />}
+                sx={{
+                  borderRadius: 2,
+                  px: 5,
+                  py: 1.5,
+                  fontWeight: 600,
+                  textTransform: 'none',
+                }}
+              >
+                Подключиться
+              </Button>
+            </Grid>
+          </Grid>
+        </Paper>
+
+        {/* === ВИДЕОМАТЕРИАЛЫ С ЗАГЛУШКОЙ === */}
+        <Box sx={{ textAlign: 'center', mb: 8 }}>
+          <Typography variant="h5" sx={{ mb: 4, fontWeight: 600 }}>
+            Больше видеоматериалов
+          </Typography>
+          <Paper
+            elevation={0}
+            sx={{
+              position: 'relative',
+              height: { xs: 240, md: 380 },
+              borderRadius: 3,
+              overflow: 'hidden',
+              border: '1px solid',
+              borderColor: 'grey.200',
+              bgcolor: 'grey.200',
+            }}
+          >
+            {/* ЗАГЛУШКА ВИДЕО */}
+            <Box
+              sx={{
+                position: 'absolute',
+                inset: 0,
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: 'grey.600',
+              }}
+            >
+              <PlayArrow sx={{ fontSize: 80, mb: 1, opacity: 0.3 }} />
+              <Typography variant="body1" sx={{ fontWeight: 500 }}>
+                Видео недоступно
+              </Typography>
+            </Box>
+
+            <Box
+              sx={{
+                position: 'absolute',
+                inset: 0,
+                bgcolor: 'rgba(0,0,0,0.3)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <IconButton size="large" sx={{ bgcolor: 'white', '&:hover': { bgcolor: '#f5f5f5' } }}>
+                <PlayArrow sx={{ fontSize: 40, color: 'primary.main' }} />
+              </IconButton>
+            </Box>
+          </Paper>
+        </Box>
+
+        {/* === АКТУАЛЬНО + АДРЕС === */}
+        <Paper elevation={0} sx={{ borderTop: '1px solid', borderColor: 'grey.200', pt: 5 }}>
+          <Grid container spacing={4} alignItems="center">
+            <Grid item xs={12} md={6}>
+              <Typography variant="body2" color="text.secondary">
+                © «Городская клиническая больница №7».<br />
+                Сайт разработан в компании AlmaWeb
+              </Typography>
+            </Grid>
+            <Grid item xs={12} md={6} sx={{ textAlign: { xs: 'center', md: 'right' } }}>
+              <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+                Мы находимся:<br />
+                <strong>Казахстан, г. Алматы, микрорайон «Калкаман»</strong>
+              </Typography>
+            </Grid>
+          </Grid>
+        </Paper>
+
+      </Container>
+    </Box>
   );
-};
-
-export default Hero;
+}

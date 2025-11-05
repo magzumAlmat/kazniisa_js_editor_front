@@ -1,179 +1,278 @@
-"use client";
-import Image from "next/image";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+// src/components/Header/index.tsx
+'use client';
 
-import ThemeToggler from "./ThemeToggler";
-import menuData from "./menuData";
+import { useState, useEffect } from 'react';
+import {
+  AppBar, Toolbar, Container, IconButton, Drawer, List, ListItemButton,
+  ListItemText, Box, Button, Menu, MenuItem, Stack, useTheme, alpha
+} from '@mui/material';
+import MenuIcon from '@mui/icons-material/Menu';
+import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
+import Image from 'next/image';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
-const Header = () => {
-  const [navigationOpen, setNavigationOpen] = useState(false);
-  const [dropdownToggler, setDropdownToggler] = useState(false);
-  const [stickyMenu, setStickyMenu] = useState(false);
+const menuData = [
+  { title: "Главная", path: "/" },
+  {
+    title: "О клинике",
+    path: "/o-klinike",
+    submenu: [
+      { title: "История", path: "/o-klinike/istoriya" },
+      { title: "Руководство", path: "/o-klinike/rukovodstvo" },
+      { title: "Структура", path: "/o-klinike/struktura" },
+      { title: "Лицензии", path: "/o-klinike/licenzii" },
+      { title: "Вакансии", path: "/o-klinike/vakansii" },
+    ]
+  },
+  {
+    title: "Пациентам",
+    path: "/pacientam",
+    submenu: [
+      { title: "Правила посещения", path: "/pacientam/pravila" },
+      { title: "Платные услуги", path: "/pacientam/platnye-uslugi" },
+      { title: "Запись на приём", path: "/zapis-na-priem" },
+      { title: "Онлайн-консультация", path: "/pacientam/konsultaciya" },
+    ]
+  },
+  {
+    title: "Отделения",
+    path: "/otdeleniya",
+    submenu: [
+      { title: "Приёмный покой", path: "/otdeleniya/priemnyy-pokoy" },
+      { title: "Хирургия", path: "/otdeleniya/hirurgiya" },
+      { title: "Урология", path: "/otdeleniya/urologiya" },
+      { title: "Травматология", path: "/otdeleniya/travmatologiya" },
+      { title: "Реанимация", path: "/otdeleniya/reanimaciya" },
+    ]
+  },
+  { title: "Услуги", path: "/uslugi" },
+  { title: "Специалисты", path: "/specialisty" },
+  { title: "Новости", path: "/novosti" },
+  { title: "Контакты", path: "/kontakty" },
+];
 
-  const pathUrl = usePathname();
-
-  // Sticky menu
-  const handleStickyMenu = () => {
-    if (window.scrollY >= 80) {
-      setStickyMenu(true);
-    } else {
-      setStickyMenu(false);
-    }
-  };
+export default function Header() {
+  const theme = useTheme();
+  const pathname = usePathname();
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [sticky, setSticky] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [activeMenu, setActiveMenu] = useState(null);
 
   useEffect(() => {
-    window.addEventListener("scroll", handleStickyMenu);
-  });
+    const handleScroll = () => setSticky(window.scrollY > 50);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const handleMenuOpen = (event, title) => {
+    setAnchorEl(event.currentTarget);
+    setActiveMenu(title);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+    setActiveMenu(null);
+  };
+
+  const toggleDrawer = (open) => () => {
+    setMobileOpen(open);
+  };
+
+  const isActive = (path) => {
+    return pathname === path || pathname.startsWith(path + '/');
+  };
+
+  const NavButton = ({ item }) => {
+    const active = isActive(item.path);
+    return (
+      <Button
+        component={Link}
+        href={item.path}
+        sx={{
+          color: active ? 'primary.main' : 'text.primary',
+          fontWeight: active ? 600 : 500,
+          textTransform: 'none',
+          fontSize: '1rem',
+          px: 2,
+          py: 1,
+          borderRadius: 1,
+          '&:hover': {
+            bgcolor: alpha(theme.palette.primary.main, 0.08),
+            color: 'primary.main',
+          },
+        }}
+      >
+        {item.title}
+      </Button>
+    );
+  };
 
   return (
-    <header
-      className={`fixed left-0 top-0 z-99999 w-full py-7 ${
-        stickyMenu
-          ? "bg-white py-4! shadow-sm transition duration-100 dark:bg-black"
-          : ""
-      }`}
-    >
-      <div className="relative mx-auto max-w-c-1390 items-center justify-between px-4 md:px-8 xl:flex 2xl:px-0">
-        <div className="flex w-full items-center justify-between xl:w-1/4">
-          <a href="/">
-            <Image
-              src="/images/logo/logo-dark.svg"
-              alt="logo"
-              width={119.03}
-              height={30}
-              className="hidden w-full dark:block"
-            />
-            <Image
-              src="/images/logo/logo-light.svg"
-              alt="logo"
-              width={119.03}
-              height={30}
-              className="w-full dark:hidden"
-            />
-          </a>
+    <>
+      <AppBar
+        position="fixed"
+        color="inherit"
+        elevation={sticky ? 4 : 0}
+        sx={{
+          bgcolor: sticky ? 'background.paper' : 'transparent',
+          transition: 'all 0.3s ease',
+          py: sticky ? 0.5 : 1.5,
+          boxShadow: sticky ? '0 4px 20px rgba(0,0,0,0.08)' : 'none',
+        }}
+      >
+        <Container maxWidth="xl">
+          <Toolbar disableGutters sx={{ justifyContent: 'space-between', minHeight: { xs: 64, md: 80 } }}>
+            {/* Логотип */}
+            <Link href="/" passHref>
+              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <Image
+                  src="/images/logo/logo.png"
+                  alt="ГКБ №7"
+                  width={130}
+                  height={80}
+                  priority
+                  style={{ objectFit: 'contain' }}
+                />
+              </Box>
+            </Link>
 
-          {/* <!-- Hamburger Toggle BTN --> */}
-          <button
-            aria-label="hamburger Toggler"
-            className="block xl:hidden"
-            onClick={() => setNavigationOpen(!navigationOpen)}
-          >
-            <span className="relative block h-5.5 w-5.5 cursor-pointer">
-              <span className="absolute right-0 block h-full w-full">
-                <span
-                  className={`relative left-0 top-0 my-1 block h-0.5 rounded-sm bg-black delay-0 duration-200 ease-in-out dark:bg-white ${
-                    !navigationOpen ? "w-full! delay-300" : "w-0"
-                  }`}
-                ></span>
-                <span
-                  className={`relative left-0 top-0 my-1 block h-0.5 rounded-sm bg-black delay-150 duration-200 ease-in-out dark:bg-white ${
-                    !navigationOpen ? "delay-400 w-full!" : "w-0"
-                  }`}
-                ></span>
-                <span
-                  className={`relative left-0 top-0 my-1 block h-0.5 rounded-sm bg-black delay-200 duration-200 ease-in-out dark:bg-white ${
-                    !navigationOpen ? "w-full! delay-500" : "w-0"
-                  }`}
-                ></span>
-              </span>
-              <span className="du-block absolute right-0 h-full w-full rotate-45">
-                <span
-                  className={`absolute left-2.5 top-0 block h-full w-0.5 rounded-sm bg-black delay-300 duration-200 ease-in-out dark:bg-white ${
-                    !navigationOpen ? "h-0! delay-0" : "h-full"
-                  }`}
-                ></span>
-                <span
-                  className={`delay-400 absolute left-0 top-2.5 block h-0.5 w-full rounded-sm bg-black duration-200 ease-in-out dark:bg-white ${
-                    !navigationOpen ? "h-0! delay-200" : "h-0.5"
-                  }`}
-                ></span>
-              </span>
-            </span>
-          </button>
-          {/* <!-- Hamburger Toggle BTN --> */}
-        </div>
-
-        {/* Nav Menu Start   */}
-        <div
-          className={`invisible h-0 w-full items-center justify-between xl:visible xl:flex xl:h-auto xl:w-full ${
-            navigationOpen &&
-            "navbar visible! mt-4 h-auto max-h-[400px] rounded-md bg-white p-7.5 shadow-solid-5 dark:bg-blacksection xl:h-auto xl:p-0 xl:shadow-none xl:dark:bg-transparent"
-          }`}
-        >
-          <nav>
-            <ul className="flex flex-col gap-5 xl:flex-row xl:items-center xl:gap-10">
-              {menuData.map((menuItem, key) => (
-                <li key={key} className={menuItem.submenu && "group relative"}>
-                  {menuItem.submenu ? (
+            {/* ДЕСКТОП */}
+            <Box sx={{ display: { xs: 'none', lg: 'flex' }, alignItems: 'center', gap: 1 }}>
+              {menuData.map((item) => (
+                <Box key={item.title} sx={{ position: 'relative' }}>
+                  {item.submenu ? (
                     <>
-                      <button
-                        onClick={() => setDropdownToggler(!dropdownToggler)}
-                        className="flex cursor-pointer items-center justify-between gap-3 hover:text-primary"
+                      <Button
+                        endIcon={<KeyboardArrowDown />}
+                        onClick={(e) => handleMenuOpen(e, item.title)}
+                        sx={{
+                          color: isActive(item.path) ? 'primary.main' : 'text.primary',
+                          fontWeight: isActive(item.path) ? 600 : 500,
+                          textTransform: 'none',
+                          fontSize: '1rem',
+                          px: 2,
+                          py: 1,
+                          borderRadius: 1,
+                          '&:hover': {
+                            bgcolor: alpha(theme.palette.primary.main, 0.08),
+                            color: 'primary.main',
+                          },
+                        }}
                       >
-                        {menuItem.title}
-                        <span>
-                          <svg
-                            className="h-3 w-3 cursor-pointer fill-waterloo group-hover:fill-primary"
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 512 512"
-                          >
-                            <path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z" />
-                          </svg>
-                        </span>
-                      </button>
+                        {item.title}
+                      </Button>
 
-                      <ul
-                        className={`dropdown ${dropdownToggler ? "flex" : ""}`}
+                      <Menu
+                        anchorEl={anchorEl}
+                        open={activeMenu === item.title}
+                        onClose={handleMenuClose}
+                        PaperProps={{
+                          sx: {
+                            mt: 1,
+                            minWidth: 220,
+                            borderRadius: 2,
+                            boxShadow: '0 12px 30px rgba(0,0,0,0.12)',
+                            border: '1px solid',
+                            borderColor: 'grey.200',
+                          },
+                        }}
                       >
-                        {menuItem.submenu.map((item, key) => (
-                          <li key={key} className="hover:text-primary">
-                            <Link href={item.path || "#"}>{item.title}</Link>
-                          </li>
-                        ))}
-                      </ul>
+                        {item.submenu.map((sub) => {
+                          const subActive = isActive(sub.path);
+                          return (
+                            <MenuItem
+                              key={sub.path}
+                              component={Link}
+                              href={sub.path}
+                              onClick={handleMenuClose}
+                              selected={subActive}
+                              sx={{
+                                fontSize: '0.95rem',
+                                py: 1.5,
+                                px: 3,
+                                '&.Mui-selected': {
+                                  bgcolor: alpha(theme.palette.primary.main, 0.1),
+                                  fontWeight: 600,
+                                },
+                              }}
+                            >
+                              {sub.title}
+                            </MenuItem>
+                          );
+                        })}
+                      </Menu>
                     </>
                   ) : (
-                    <Link
-                      href={`${menuItem.path}`}
-                      className={
-                        pathUrl === menuItem.path
-                          ? "text-primary hover:text-primary"
-                          : "hover:text-primary"
-                      }
-                    >
-                      {menuItem.title}
-                    </Link>
+                    <NavButton item={item} />
                   )}
-                </li>
+                </Box>
               ))}
-            </ul>
-          </nav>
+            </Box>
 
-          <div className="mt-7 flex items-center gap-6 xl:mt-0">
-            <ThemeToggler />
-
-            <Link
-              href="https://github.com/NextJSTemplates/solid-nextjs"
-              className="text-regular font-medium text-waterloo hover:text-primary"
+            {/* МОБИЛЬНАЯ */}
+            <IconButton
+              onClick={toggleDrawer(true)}
+              sx={{ display: { lg: 'none' } }}
             >
-              GitHub Repo 🌟
-            </Link>
+              <MenuIcon />
+            </IconButton>
+          </Toolbar>
+        </Container>
+      </AppBar>
 
-            <Link
-              href="https://nextjstemplates.com/templates/solid"
-              className="flex items-center justify-center rounded-full bg-primary px-7.5 py-2.5 text-regular text-white duration-300 ease-in-out hover:bg-primaryho"
-            >
-              Get Pro 🔥
-            </Link>
-          </div>
-        </div>
-      </div>
-    </header>
+      {/* МОБИЛЬНОЕ МЕНЮ */}
+      <Drawer
+        anchor="right"
+        open={mobileOpen}
+        onClose={toggleDrawer(false)}
+        PaperProps={{ sx: { width: 300, pt: 10, px: 2 } }}
+      >
+        <List>
+          {menuData.map((item) => {
+            const active = isActive(item.path);
+            return (
+              <Box key={item.title}>
+                <ListItemButton
+                  component={Link}
+                  href={item.path}
+                  selected={active}
+                  onClick={toggleDrawer(false)}
+                  sx={{
+                    borderRadius: 2,
+                    mb: 0.5,
+                    '&.Mui-selected': {
+                      bgcolor: alpha(theme.palette.primary.main, 0.1),
+                      color: 'primary.main',
+                      fontWeight: 600,
+                    },
+                  }}
+                >
+                  <ListItemText primary={item.title} />
+                  {item.submenu && <KeyboardArrowDown />}
+                </ListItemButton>
+
+                {item.submenu && (
+                  <List sx={{ pl: 3, bgcolor: 'grey.50', borderRadius: 2 }}>
+                    {item.submenu.map((sub) => (
+                      <ListItemButton
+                        key={sub.path}
+                        component={Link}
+                        href={sub.path}
+                        onClick={toggleDrawer(false)}
+                        sx={{ py: 0.75 }}
+                      >
+                        <ListItemText primary={sub.title} />
+                      </ListItemButton>
+                    ))}
+                  </List>
+                )}
+              </Box>
+            );
+          })}
+        </List>
+      </Drawer>
+    </>
   );
-};
-
-// w-full delay-300
-
-export default Header;
+}

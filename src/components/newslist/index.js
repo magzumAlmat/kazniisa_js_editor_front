@@ -2,7 +2,7 @@
 'use client'
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getAllPublicDocumentsAction } from '@/store/slices/authSlice';
+import { getAllPublicDocumentsAction } from '../../store/slices/authSlice';
 import Link from 'next/link';
 
 // MUI Imports

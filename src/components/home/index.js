@@ -23,6 +23,7 @@ import Pricing from '../Pricing';
 import Contact from '../Contact';
 import Blog from '../Blog';
 import { Container } from '@mui/material';
+import NewsBlog from '../newsBlog';
 // // === ДАННЫЕ ИЗ САЙТА ГКБ №7 ===
 // const menuItems = [
 //   { text: "Главная", icon: <Home />, link: "/" },
@@ -55,10 +56,15 @@ export default function Main() {
 
   return (
     <Container maxWidth="lg" sx={{ flexGrow: 1, py: 4 }}>
+      <br />
+       <br />
+        <br />
       <Hero />
-      <Brands />
+<NewsBlog />
+      {/* <Footer />   */}
+      {/* <Brands /> */}
       {/* <Feature /> */}
-      <About />
+      {/* <About />
       <FeaturesTab />
       <FunFact />
       <Integration />
@@ -67,7 +73,7 @@ export default function Main() {
       <Testimonial />
       <Pricing />
       <Contact />
-      <Blog />
+      <Blog /> */}
 </Container>
 
   );
