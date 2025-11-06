@@ -40,7 +40,7 @@ import {
   createDocumentAction,
   createDocumentByTemplateAction,
   getAllAdminTemplateAction,
-} from "@/store/slices/authSlice";
+} from "../../store/slices/authSlice";
 import { useRouter } from "next/navigation";
 
 // CreateDocument Component

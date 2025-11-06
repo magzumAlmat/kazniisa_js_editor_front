@@ -109,7 +109,11 @@ ul li a{
 @media (min-width: 1536px) {
   .container {
     padding: 0;
+    width: auto!important;
   }
+
+
+
 }
 
 .footerTop {

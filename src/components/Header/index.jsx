@@ -1,3 +1,4 @@
+// src/components/Header/index.tsx
 'use client';
 
 import { useState, useEffect, useMemo } from 'react';
@@ -18,50 +19,46 @@ import * as React from 'react';
 
 // === 1. СТИЛИЗОВАННЫЕ КОМПОНЕНТЫ ===
 
-// Стилизованный контейнер для Mega Menu
 const MegaMenuContainer = styled(Paper)(({ theme }) => ({
   position: 'absolute',
   top: '100%',
-  left: '50%',
-  transform: 'translateX(-50%)',
+  left: 0,
+  right: 0,
   zIndex: theme.zIndex.appBar - 1,
-  width: '100%',
-  maxWidth: 1200, // Ограничение ширины для лучшего восприятия
-  padding: theme.spacing(3),
+  width: '100vw',
+  maxWidth: 1400,
+  margin: '0 auto',
+  padding: theme.spacing(4),
   borderRadius: theme.shape.borderRadius * 2,
-  boxShadow: theme.shadows[10],
-  borderTop: `4px solid ${theme.palette.primary.main}`,
-  display: 'flex',
-  flexDirection: 'column',
-  gap: theme.spacing(2),
+  boxShadow: theme.shadows[16],
+  borderTop: `5px solid ${theme.palette.primary.main}`,
   backgroundColor: theme.palette.background.paper,
 }));
 
-// Стилизованный заголовок группы в Mega Menu
 const GroupTitle = styled(Typography)(({ theme }) => ({
   fontWeight: 700,
-  fontSize: '1rem',
+  fontSize: '1.1rem',
   color: theme.palette.primary.main,
-  marginBottom: theme.spacing(1),
+  marginBottom: theme.spacing(1.5),
   borderBottom: `1px solid ${theme.palette.divider}`,
-  paddingBottom: theme.spacing(0.5),
+  paddingBottom: theme.spacing(0.75),
 }));
 
-// Стилизованный элемент ссылки в Mega Menu
 const MegaMenuItem = styled(Link)(({ theme }) => ({
   display: 'block',
   textDecoration: 'none',
   color: theme.palette.text.primary,
-  padding: theme.spacing(0.5, 1),
+  padding: theme.spacing(0.75, 1),
   borderRadius: theme.shape.borderRadius,
-  transition: 'background-color 0.2s, color 0.2s',
+  transition: 'all 0.2s ease',
+  fontSize: '0.95rem',
   '&:hover': {
     backgroundColor: alpha(theme.palette.primary.main, 0.1),
     color: theme.palette.primary.dark,
+    fontWeight: 500,
   },
 }));
 
-// Стилизованный компонент поиска
 const SearchBox = styled('div')(({ theme }) => ({
   position: 'relative',
   borderRadius: theme.shape.borderRadius * 2,
@@ -69,11 +66,9 @@ const SearchBox = styled('div')(({ theme }) => ({
   '&:hover': {
     backgroundColor: alpha(theme.palette.common.white, 0.25),
   },
-  marginLeft: 0,
   width: '100%',
-  [theme.breakpoints.up('sm')]: {
-    marginLeft: theme.spacing(1),
-    width: 'auto',
+  [theme.breakpoints.up('lg')]: {
+    width: 240,
   },
   border: `1px solid ${theme.palette.divider}`,
   backgroundColor: theme.palette.mode === 'light' ? theme.palette.grey[50] : theme.palette.grey[800],
@@ -92,21 +87,22 @@ const SearchIconWrapper = styled('div')(({ theme }) => ({
 
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
   color: 'inherit',
+  width: '100%',
   '& .MuiInputBase-input': {
     padding: theme.spacing(1, 1, 1, 0),
     paddingLeft: `calc(1em + ${theme.spacing(4)})`,
     transition: theme.transitions.create('width'),
     width: '100%',
-    [theme.breakpoints.up('sm')]: {
-      width: '12ch',
+    [theme.breakpoints.up('lg')]: {
+      width: '100%',
       '&:focus': {
-        width: '20ch',
+        width: '100%',
       },
     },
   },
 }));
 
-// === 2. ДАННЫЕ МЕНЮ (Используем оригинальные данные) ===
+// === 2. ДАННЫЕ МЕНЮ ===
 
 const menuData = [
   { title: "Главная", path: "/" },
@@ -159,7 +155,6 @@ const menuData = [
     submenu: [
       { title: "Наши направления", path: "/uslugi/napravleniya", group: "Общие" },
       { title: "Обязательное социальное медицинское страхование", path: "/", group: "Общие" },
-
       { title: "Приемный покой", path: "/uslugi/stacionar/priemnyy-pokoy", group: "Стационар" },
       {
         title: "Отдел нейрохирургического профиля",
@@ -196,8 +191,8 @@ const menuData = [
         submenu: [
           { title: "Травматология и политравма", path: "/uslugi/stacionar/hirurgiya/travmatologiya", group: "Хирургия" },
           { title: "Отделение урологии", path: "/uslugi/stacionar/hirurgiya/urologiya", group: "Хирургия" },
-          { title: "Отделение гинекологии №1", path: "/uslugi/stacionar/hirurgiya/ginekologiya-1", group: "Хирургия" },
-          { title: "Отделение гинекологии №2", path: "/uslugi/stacionar/hirurgiya/ginekologiya-2", group: "Хирургия" },
+          { title: "Отделение женской консультации №1", path: "/uslugi/stacionar/hirurgiya/ginekologiya-1", group: "Хирургия" },
+          { title: "Отделение женской консультации №2", path: "/uslugi/stacionar/hirurgiya/ginekologiya-2", group: "Хирургия" },
           { title: "Отделение хирургической инфекции", path: "/uslugi/stacionar/hirurgiya/hirurgicheskaya-infekciya", group: "Хирургия" },
           { title: "Отделение экстренной хирургии", path: "/uslugi/stacionar/hirurgiya/ekstrennaya-hirurgiya", group: "Хирургия" },
           { title: "Отделение плановой хирургии с центром гепатопанкреатобилиарной хирургии", path: "/uslugi/stacionar/hirurgiya/planovaya-hirurgiya", group: "Хирургия" },
@@ -209,16 +204,11 @@ const menuData = [
         ]
       },
       { title: "Отделение нейрореабилитации", path: "/uslugi/stacionar/neyroreabilitaciya", group: "Стационар" },
-
       { title: "Урологические операции", path: "/uslugi/operacii/urologicheskie", group: "Операции" },
       { title: "Нейрохирургические операции", path: "/uslugi/operacii/neyrohirurgicheskie", group: "Операции" },
       { title: "Хирургические операции", path: "/uslugi/operacii/hirurgicheskie", group: "Операции" },
       { title: "Гинекологические операции", path: "/uslugi/operacii/ginekologicheskie", group: "Операции" },
       { title: "Отделение Нейроонкологии", path: "/uslugi/operacii/neiroonkologiya", group: "Операции" },
-
-      { title: "Лучевая диагностика (КТ, МРТ, УЗИ)", path: "/uslugi/laboratoriya/luchevaya-diagnostika", group: "Диагностика" },
-      { title: "Функциональная диагностика", path: "/uslugi/laboratoriya/funkcionalnaya-diagnostika", group: "Диагностика" },
-
       { title: "Дарсонвализация", path: "/uslugi/fizioterapiya/darsonvalizaciya", group: "Физиотерапия" },
       { title: "Магнитотерапия", path: "/uslugi/fizioterapiya/magnitoterapiya", group: "Физиотерапия" },
       { title: "Ультрафиолетовое излучение (УФО)", path: "/uslugi/fizioterapiya/ufo", group: "Физиотерапия" },
@@ -230,7 +220,8 @@ const menuData = [
       { title: "Подводное вытяжение позвоночника ЛИВ", path: "/uslugi/fizioterapiya/podvodnoye-vytyazheniye", group: "Физиотерапия" },
       { title: "Гидромассажные ванны", path: "/uslugi/fizioterapiya/gidromassazhnye-vanny", group: "Физиотерапия" },
       { title: "Электросон", path: "/uslugi/fizioterapiya/elektroson", group: "Физиотерапия" },
-
+      { title: "Лучевая диагностика (КТ, МРТ, УЗИ)", path: "/uslugi/laboratoriya/luchevaya-diagnostika", group: "Диагностика" },
+      { title: "Функциональная диагностика", path: "/uslugi/laboratoriya/funkcionalnaya-diagnostika", group: "Диагностика" },
       { title: "Стоматологические услуги", path: "/uslugi/stomatologiya", group: "Прочее" },
       { title: "Прейскурант цен", path: "/uslugi/preyskurant", group: "Прочее" },
       {
@@ -251,7 +242,7 @@ const menuData = [
     submenu: [
       { title: "Реестр государственных услуг", path: "/gosuslugi/reestr", group: "Документы" },
       { title: "Нормативно-правовые акты", path: "/gosuslugi/normativy", group: "Документы" },
-      { title: "Порядок обжалования", path: "/gosuslugi/obzhalovanie", group: "Права" },
+      { title: "Порядок обжалования", path: "/gosuslugi/obzhalovanie室", group: "Права" },
       { title: "Стандарты государственных услуг", path: "/gosuslugi/standarty", group: "Документы" },
       { title: "Общественный совет", path: "/gosuslugi/sovet", group: "Прозрачность" },
     ]
@@ -295,7 +286,6 @@ const menuData = [
 
 // === 3. ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ===
 
-// Функция для группировки элементов меню
 const groupMenuItems = (items) => {
   return items.reduce((acc, item) => {
     const group = item.group || 'Без группы';
@@ -307,17 +297,14 @@ const groupMenuItems = (items) => {
 
 // === 4. КОМПОНЕНТЫ МЕНЮ ===
 
-// Компонент для отображения Mega Menu (Десктоп)
 const DesktopMegaMenu = React.memo(({ items, closeMenu }) => {
   const groupedItems = useMemo(() => groupMenuItems(items), [items]);
   const theme = useTheme();
-
-  // Определяем количество колонок. Максимум 4, но не больше, чем количество групп.
   const numGroups = Object.keys(groupedItems).length;
   const numColumns = Math.min(4, numGroups);
 
   return (
-    <Grid container spacing={3}>
+    <Grid container spacing={4}>
       {Object.entries(groupedItems).map(([group, groupItems]) => (
         <Grid item xs={12} sm={6} md={12 / numColumns} key={group}>
           <GroupTitle>{group}</GroupTitle>
@@ -327,7 +314,6 @@ const DesktopMegaMenu = React.memo(({ items, closeMenu }) => {
                 <MegaMenuItem href={item.path} onClick={closeMenu}>
                   <ListItemText primary={item.title} sx={{ m: 0 }} />
                 </MegaMenuItem>
-                {/* Обработка вложенных подменю (2-й уровень) */}
                 {item.submenu && (
                   <Box sx={{ pl: 1, borderLeft: `2px solid ${alpha(theme.palette.primary.main, 0.3)}`, ml: 1 }}>
                     {item.submenu.map(subItem => (
@@ -347,8 +333,6 @@ const DesktopMegaMenu = React.memo(({ items, closeMenu }) => {
 });
 DesktopMegaMenu.displayName = 'DesktopMegaMenu';
 
-
-// Компонент для отображения мобильного меню (Drawer)
 const MobileMenuItem = ({ item, depth = 0, toggleDrawer }) => {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
@@ -419,7 +403,7 @@ export default function Header() {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [sticky, setSticky] = useState(false);
-  const [activeMenu, setActiveMenu] = useState(null); // Хранит title активного меню для Mega Menu
+  const [activeMenu, setActiveMenu] = useState(null);
 
   useEffect(() => {
     const handleScroll = () => setSticky(window.scrollY > 50);
@@ -459,7 +443,7 @@ export default function Header() {
           fontWeight: active ? 600 : 500,
           textTransform: 'none',
           fontSize: '1rem',
-          px: 2,
+          px: 2.5,
           py: 1,
           borderRadius: 1,
           cursor: 'pointer',
@@ -478,10 +462,10 @@ export default function Header() {
 
   return (
     <>
-      {/* Верхняя полоса с контактами и поиском (Только для десктопа) */}
-      <Box sx={{ bgcolor: theme.palette.primary.main, display: { xs: 'none', md: 'block' } }}>
-        <Container maxWidth="xl">
-          <Toolbar variant="dense" disableGutters sx={{ minHeight: 40, justifyContent: 'flex-end', gap: 3 }}>
+      {/* Верхняя полоса */}
+      <Box sx={{ bgcolor: theme.palette.primary.main, display: { xs: 'none', lg: 'block' } }}>
+        <Container maxWidth={false} sx={{ px: { xs: 2, lg: 3 } }}>
+          <Toolbar variant="dense" disableGutters sx={{ minHeight: 44, justifyContent: 'flex-end', gap: 3 }}>
             <Button
               component={Link}
               href="/zapis-na-priem"
@@ -503,13 +487,8 @@ export default function Header() {
               </Typography>
             </Box>
             <SearchBox>
-              <SearchIconWrapper>
-                <SearchIcon />
-              </SearchIconWrapper>
-              <StyledInputBase
-                placeholder="Поиск..."
-                inputProps={{ 'aria-label': 'search' }}
-              />
+              <SearchIconWrapper><SearchIcon /></SearchIconWrapper>
+              <StyledInputBase placeholder="Поиск..." />
             </SearchBox>
           </Toolbar>
         </Container>
@@ -517,36 +496,43 @@ export default function Header() {
 
       {/* Основной Header */}
       <AppBar
-        position="sticky" // Изменено на sticky для лучшего UX
+        position="sticky"
         color="inherit"
         elevation={sticky ? 4 : 0}
         sx={{
-          bgcolor: sticky ? 'background.paper' : 'background.paper', // Всегда белый/бумажный фон
+          bgcolor: 'background.paper',
           transition: 'all 0.3s ease',
           py: sticky ? 0.5 : 1,
           boxShadow: sticky ? '0 4px 20px rgba(0,0,0,0.08)' : 'none',
           zIndex: theme.zIndex.appBar,
         }}
       >
-        <Container maxWidth="xl">
-          <Toolbar disableGutters sx={{ justifyContent: 'space-between', minHeight: { xs: 64, md: 70 } }}>
+        <Container maxWidth={false} sx={{ px: { xs: 2, lg: 3 } }}>
+          <Toolbar disableGutters sx={{ minHeight: { xs: 64, md: 80 } }}>
             {/* Логотип */}
-            <Link href="/" passHref>
-              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            {/* <Link href="/" passHref>
+              <Box sx={{ display: 'flex', alignItems: 'center', mr: 4 }}>
                 <Image
-                  src="/images/logo/logo.png" // Предполагаемый путь к логотипу
+                  src="/images/logo/logo.png"
                   alt="ГКБ №7"
-                  width={150} // Увеличенный размер логотипа
-                  height={60}
+                  width={160}
+                  height={70}
                   priority
                   style={{ objectFit: 'contain' }}
                 />
               </Box>
-            </Link>
+            </Link> */}
 
-            {/* Десктопное меню (Mega Menu) */}
+            {/* Меню по центру */}
             <Box
-              sx={{ display: { xs: 'none', lg: 'flex' }, alignItems: 'center', gap: 1, position: 'relative' }}
+              sx={{
+                flexGrow: 1,
+                display: { xs: 'none', lg: 'flex' },
+                justifyContent: 'center',
+                alignItems: 'center',
+                gap: 1,
+                position: 'relative',
+              }}
               onMouseLeave={closeMenu}
             >
               {menuData.map((item) => (
@@ -555,7 +541,6 @@ export default function Header() {
                 </Box>
               ))}
 
-              {/* Контейнер для Mega Menu, который отображается при hover */}
               {menuData.map((item) => item.submenu && (
                 <Collapse
                   key={`mega-${item.title}`}
@@ -564,45 +549,47 @@ export default function Header() {
                   sx={{
                     position: 'absolute',
                     top: '100%',
-                    left: '50%',
-                    transform: 'translateX(-50%)',
-                    width: '100vw',
-                    maxWidth: 1200,
+                    left: 0,
+                    right: 0,
                     pointerEvents: activeMenu === item.title ? 'auto' : 'none',
                     zIndex: theme.zIndex.appBar - 1,
                   }}
                 >
                   <MegaMenuContainer>
-                    <DesktopMegaMenu items={item.submenu} closeMenu={closeMenu} />
+                    <Container maxWidth="xl">
+                      <DesktopMegaMenu items={item.submenu} closeMenu={closeMenu} />
+                    </Container>
                   </MegaMenuContainer>
                 </Collapse>
               ))}
             </Box>
 
-            {/* Кнопка мобильного меню и другие элементы для мобильных устройств */}
-            <Box sx={{ display: { xs: 'flex', lg: 'none' }, alignItems: 'center', gap: 1 }}>
-              <IconButton
+            {/* Поиск и кнопка справа */}
+            {/* <Box sx={{ display: { xs: 'none', lg: 'flex' }, alignItems: 'center', gap: 2 }}>
+              <SearchBox>
+                <SearchIconWrapper><SearchIcon /></SearchIconWrapper>
+                <StyledInputBase placeholder="Поиск по сайту..." />
+              </SearchBox>
+              <Button
                 component={Link}
                 href="/zapis-na-priem"
-                color="primary"
-                size="large"
-                sx={{ display: { xs: 'none', sm: 'inline-flex' } }}
+                variant="contained"
+                size="medium"
+                sx={{ whiteSpace: 'nowrap', fontWeight: 600 }}
               >
-                <PhoneIcon />
-              </IconButton>
-              <IconButton
-                onClick={toggleDrawer(true)}
-                color="primary"
-                size="large"
-              >
-                <MenuIcon />
-              </IconButton>
-            </Box>
+                Записаться
+              </Button>
+            </Box> */}
+
+            {/* Мобильная кнопка */}
+            <IconButton onClick={toggleDrawer(true)} sx={{ display: { lg: 'none' } }}>
+              <MenuIcon />
+            </IconButton>
           </Toolbar>
         </Container>
       </AppBar>
 
-      {/* Мобильное меню (Drawer) */}
+      {/* Мобильное меню */}
       <Drawer
         anchor="right"
         open={mobileOpen}

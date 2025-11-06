@@ -1,10 +1,10 @@
 
-import END_POINT from "@/components/config/index";
+import END_POINT from "../../components/config/index";
 import React, { useState, useCallback, useMemo, useRef } from 'react';
 import { createEditor, Transforms, Editor, Text } from 'slate';
 import { Slate, Editable, withReact, useSlate, useSlateStatic, useSelected, useFocused } from 'slate-react';
 import { useDispatch } from 'react-redux';
-import { updateDocumentContentAction, deleteDocumentAction, uploadImageAction } from '@/store/slices/authSlice';
+import { updateDocumentContentAction, deleteDocumentAction, uploadImageAction } from '../../store/slices/authSlice';
 import Button from '@mui/material/Button';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Stack from '@mui/material/Stack';

@@ -1,277 +1,199 @@
-// components/Footer.tsx
 "use client";
-import { motion } from "framer-motion";
-import Image from "next/image";
-import Link from "next/link";
+
+import { Box, Container, Grid, Typography, Link as MuiLink, Divider, IconButton, useTheme } from '@mui/material';
+import Link from 'next/link';
+import Image from 'next/image';
+import { Facebook, Instagram, YouTube, Phone, Email, LocationOn } from '@mui/icons-material';
+import { Stack } from '@mui/system';
+
+// === 1. ДАННЫЕ КАРТЫ САЙТА (Расширенные данные из Header.js) ===
+
+const menuData = [
+  { title: "Главная", path: "/" },
+  {
+    title: "О клинике",
+    path: "/o-klinike",
+    submenu: [
+      { title: "О клинике", path: "/o-klinike/" },
+      { title: "Администрация", path: "/o-klinike/administraciya" },
+      { title: "Структура клиники", path: "/o-klinike/struktura-kliniki" },
+      { title: "Вакансии", path: "/o-klinike/vakansii" },
+      { title: "Новости", path: "/o-klinike/novosti" },
+      { title: "Служба поддержки пациентов", path: "/o-klinike/sluzhba-podderzhki" },
+      { title: "Нормативно-правовая база", path: "/o-klinike/normativnaya-baza" },
+      { title: "Лицензии", path: "/o-klinike/licenzii" },
+      { title: "Противодействие коррупции", path: "/o-klinike/protivodeystvie-korrupcii" },
+    ]
+  },
+  {
+    title: "Медицинские услуги",
+    path: "/uslugi",
+    submenu: [
+      { title: "Наши направления", path: "/uslugi/napravleniya" },
+      { title: "Стационар", path: "/uslugi/stacionar" },
+      { title: "Хирургия", path: "/uslugi/stacionar/hirurgiya" },
+      { title: "Терапия", path: "/uslugi/stacionar/terapiya" },
+      { title: "Диагностика (КТ, МРТ, УЗИ)", path: "/uslugi/diagnostika" },
+      { title: "Физиотерапия", path: "/uslugi/fizioterapiya" },
+      { title: "Прейскурант цен", path: "/uslugi/preyskurant" },
+    ]
+  },
+  {
+    title: "Государственные услуги",
+    path: "/gosuslugi",
+    submenu: [
+      { title: "Реестр государственных услуг", path: "/gosuslugi/reestr" },
+      { title: "Нормативно-правовые акты", path: "/gosuslugi/normativy" },
+      { title: "Порядок обжалования", path: "/gosuslugi/obzhalovanie" },
+    ]
+  },
+  {
+    title: "Прочее",
+    path: "/prochee",
+    submenu: [
+      { title: "Закупки", path: "/zakupki" },
+      { title: "Вопрос-ответ", path: "/gostevaya/vopros-otvet" },
+      { title: "Благодарности", path: "/gostevaya/blagodarnosti" },
+      { title: "Контакты", path: "/kontakty" },
+    ]
+  },
+];
+
+// === 2. КОМПОНЕНТ FOOTER ===
 
 const Footer = () => {
+  const theme = useTheme();
   const year = new Date().getFullYear();
 
-  const sitemap = [
-    { href: "/o-klinike", text: "О клинике" },
-    { href: "/uslugi", text: "Платные услуги" },
-    { href: "/specialisty", text: "Специалисты" },
-    { href: "/pacientam", text: "Пациентам" },
-    { href: "/otdeleniya", text: "Отделения" },
-    { href: "/novosti", text: "Новости" },
-    { href: "/kontakty", text: "Контакты" },
-    { href: "/zapis-na-priem", text: "Запись на прием" },
-  ];
+  // Функция для разделения меню на 4 колонки
+  const getFooterLinks = () => {
+    const allLinks = menuData.flatMap(item => [
+      { title: item.title, path: item.path, isMain: true },
+      ...(item.submenu || []).map(sub => ({ title: sub.title, path: sub.path, isMain: false }))
+    ]);
+
+    // Разделяем все ссылки на 4 примерно равные части
+    const chunkSize = Math.ceil(allLinks.length / 4);
+    const chunks = [];
+    for (let i = 0; i < allLinks.length; i += chunkSize) {
+      chunks.push(allLinks.slice(i, i + chunkSize));
+    }
+    return chunks;
+  };
+
+  const footerLinks = getFooterLinks();
 
   return (
-    <>
-      {/* ---------- JSX‑style (local + global) ---------- */}
-      <style jsx>{`
-        /* ---------- Local styles ---------- */
-        .footer {
-          border-top: 1px solid #e5e7eb;
-          background: #fff;
-        }
-        .footer.dark {
-          border-top-color: #374151;
-          background: #0f172a;
-        }
-        .container {
-          max-width: 1390px;
-          margin: 0 auto;
-          padding: 0 1rem;
-        }
-        @media (min-width: 768px) {
-          .container { padding: 0 2rem; }
-        }
-        @media (min-width: 1536px) {
-          .container { padding: 0; }
-        }
+    <Box
+      component="footer"
+      sx={{
+        bgcolor: theme.palette.mode === 'light' ? theme.palette.grey[50] : theme.palette.grey[900],
+        borderTop: `1px solid ${theme.palette.divider}`,
+        pt: 8,
+        pb: 3,
+      }}
+    >
+      <Container maxWidth="xl">
+        <Grid container spacing={4}>
+          {/* Колонка 1: Логотип и Контакты */}
+          <Grid item xs={12} md={4} lg={3}>
+            <Box sx={{ mb: 3 }}>
+              <Link href="/" passHref>
+                <Image
+                  width={150}
+                  height={60}
+                  src="/images/logo/gkb7-logo.png" // Предполагаемый путь к логотипу
+                  alt="Логотип ГКБ №7"
+                  style={{ objectFit: 'contain' }}
+                />
+              </Link>
+            </Box>
+            
+            <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+              Городская клиническая больница №7 — ваш надежный партнер в заботе о здоровье.
+            </Typography>
 
-        .top {
-          padding: 5rem 0;
-        }
-        @media (min-width: 1024px) {
-          .top { padding: 6.25rem 0; }
-        }
-
-        .content {
-          display: flex;
-          flex-direction: column;
-          gap: 2rem;
-        }
-        @media (min-width: 1024px) {
-          .content {
-            flex-direction: row;
-            justify-content: space-between;
-          }
-        }
-
-        .logoSection {
-          width: 50%;
-        }
-        @media (min-width: 1024px) {
-          .logoSection { width: 25%; }
-        }
-        .logoLink { display: block; margin-bottom: 1.25rem; }
-        .desc {
-          margin-bottom: 2.5rem;
-          color: #6b7280;
-          font-size: .875rem;
-          line-height: 1.5;
-        }
-        .dark .desc { color: #9ca3af; }
-
-        .contactLabel {
-          margin-bottom: .375rem;
-          font-size: .75rem;
-          font-weight: 700;
-          text-transform: uppercase;
-          letter-spacing: .3125rem;
-          color: #374151;
-        }
-        .dark .contactLabel { color: #e5e7eb; }
-
-        .contactEmail {
-          font-weight: 500;
-          color: #111827;
-          text-decoration: none;
-        }
-        .dark .contactEmail { color: #fff; }
-
-        .linksWrap {
-          display: flex;
-          flex-direction: column;
-          gap: 2rem;
-          width: 100%;
-        }
-        @media (min-width: 768px) {
-          .linksWrap {
-            flex-direction: row;
-            justify-content: space-between;
-          }
-        }
-        @media (min-width: 1024px) {
-          .linksWrap { width: 66.666%; }
-        }
-        @media (min-width: 1280px) {
-          .linksWrap { width: 58.333%; }
-        }
-
-        .group { flex: 1; }
-        .groupTitle {
-          margin-bottom: 2.25rem;
-          font-size: 1.125rem;
-          font-weight: 500;
-          color: #111827;
-        }
-        .dark .groupTitle { color: #fff; }
-
-        .link {
-          display: block;
-          margin-bottom: .75rem;
-          color: #4b5563;
-          text-decoration: none;
-          transition: color .3s;
-        }
-        .link:hover { color: #6366f1; }
-        .dark .link { color: #d1d5db; }
-        .dark .link:hover { color: #818cf8; }
-
-        /* ---------- Bottom ---------- */
-        .bottom {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          gap: 1.25rem;
-          padding: 1.75rem 0;
-          border-top: 1px solid #e5e7eb;
-        }
-        @media (min-width: 1024px) {
-          .bottom {
-            flex-direction: row;
-            justify-content: space-between;
-          }
-        }
-        .dark .bottom { border-top-color: #374151; }
-
-        .bottomLink {
-          color: #4b5563;
-          font-size: .875rem;
-          text-decoration: none;
-          transition: color .3s;
-        }
-        .bottomLink:hover { color: #6366f1; }
-        .dark .bottomLink { color: #d1d5db; }
-        .dark .bottomLink:hover { color: #818cf8; }
-
-        .copy {
-          color: #6b7280;
-          font-size: .875rem;
-        }
-        .dark .copy { color: #9ca3af; }
-
-      `}</style>
-
-      <style jsx global>{`
-        /* SVG fill‑currentColor */
-        .fillCurrent { fill: currentColor; }
-      `}</style>
-
-      {/* ---------- Footer markup ---------- */}
-      <footer
-        className={`footer ${
-          typeof window !== "undefined" &&
-          document.documentElement.classList.contains("dark")
-            ? "dark"
-            : ""
-        }`}
-      >
-        <div className="container">
-          {/* Top */}
-          <div className="top">
-            <div className="content">
-              {/* Logo + contact */}
-              <motion.div
-                variants={{ hidden: { opacity: 0, y: -20 }, visible: { opacity: 1, y: 0 } }}
-                initial="hidden"
-                whileInView="visible"
-                transition={{ duration: 1, delay: 0.5 }}
-                viewport={{ once: true }}
-                className="logoSection"
-              >
-                <a href="/" className="logoLink">
-                  <Image
-                    width={140}
-                    height={100}
-                    src="/images/logo/gkb7-logo.png"
-                    alt="Логотип ГКБ №7"
-                  />
-                </a>
-
-                <p className="desc">
+            <Stack spacing={1} sx={{ mb: 3 }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                <LocationOn color="primary" fontSize="small" />
+                <Typography variant="body2" color="text.primary">
                   г. Алматы, микрорайон Калкаман, 20
-                </p>
-
-                <p className="contactLabel">Контакты</p>
-                <a href="mailto:info@gkb7.kz" className="contactEmail">
-                  info@gkb7.kz
-                </a>
-                <p className="contactEmail" style={{ marginTop: '0.5rem' }}>
+                </Typography>
+              </Box>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                <Phone color="primary" fontSize="small" />
+                <MuiLink href="tel:+77273410666" color="text.primary" underline="hover" variant="body2">
                   Call-центр: 8 (727) 341-06-66
-                </p>
-                 <p className="contactEmail" style={{ marginTop: '0.5rem' }}>
-                  Приемная: 8 (727) 270-86-00
-                </p>
-              </motion.div>
+                </MuiLink>
+              </Box>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                <Email color="primary" fontSize="small" />
+                <MuiLink href="mailto:info@gkb7.kz" color="text.primary" underline="hover" variant="body2">
+                  info@gkb7.kz
+                </MuiLink>
+              </Box>
+            </Stack>
 
-              {/* Links */}
-              <div className="linksWrap">
-                <motion.div
-                  variants={{ hidden: { opacity: 0, y: -20 }, visible: { opacity: 1, y: 0 } }}
-                  initial="hidden"
-                  whileInView="visible"
-                  transition={{ duration: 1, delay: 0.1 }}
-                  viewport={{ once: true }}
-                  className="group"
-                >
-                  <h4 className="groupTitle">Карта сайта</h4>
-                  <ul>
-                    {sitemap.map((item) => (
-                      <li key={item.href}>
-                        <Link href={item.href} className="link">
-                          {item.text}
-                        </Link>
-                      </li>
+            <Box sx={{ mt: 2 }}>
+              <IconButton color="primary" aria-label="Facebook">
+                <Facebook />
+              </IconButton>
+              <IconButton color="primary" aria-label="Instagram">
+                <Instagram />
+              </IconButton>
+              <IconButton color="primary" aria-label="YouTube">
+                <YouTube />
+              </IconButton>
+            </Box>
+          </Grid>
+
+          {/* Колонка 2-5: Карта сайта */}
+          <Grid item xs={12} md={8} lg={9}>
+            <Typography variant="h6" sx={{ mb: 3, fontWeight: 700, color: 'text.primary' }}>
+              Карта сайта
+            </Typography>
+            <Grid container spacing={2}>
+              {footerLinks.map((column, colIndex) => (
+                <Grid item xs={6} sm={4} md={3} lg={3} key={colIndex}>
+                  <Stack spacing={0.5}>
+                    {column.map((item, itemIndex) => (
+                      <MuiLink
+                        component={Link}
+                        href={item.path}
+                        key={item.path + itemIndex}
+                        color={item.isMain ? 'text.primary' : 'text.secondary'}
+                        underline="hover"
+                        variant="body2"
+                        sx={{ fontWeight: item.isMain ? 600 : 400, ml: item.isMain ? 0 : 1 }}
+                      >
+                        {item.title}
+                      </MuiLink>
                     ))}
-                  </ul>
-                </motion.div>
-              </div>
-            </div>
-          </div>
+                  </Stack>
+                </Grid>
+              ))}
+            </Grid>
+          </Grid>
+        </Grid>
 
-          {/* Bottom */}
-          <div className="bottom">
-            <motion.div
-              variants={{ hidden: { opacity: 0, y: -20 }, visible: { opacity: 1, y: 0 } }}
-              initial="hidden"
-              whileInView="visible"
-              transition={{ duration: 1, delay: 0.1 }}
-              viewport={{ once: true }}
-            >
-               <p className="copy">
-                Разработано <a href="https://github.com/v-v-i" target="_blank" rel="noopener noreferrer" className="bottomLink">v-v-i</a>
-              </p>
-            </motion.div>
+        <Divider sx={{ my: 4 }} />
 
-            <motion.div
-              variants={{ hidden: { opacity: 0, y: -20 }, visible: { opacity: 1, y: 0 } }}
-              initial="hidden"
-              whileInView="visible"
-              transition={{ duration: 1, delay: 0.1 }}
-              viewport={{ once: true }}
-            >
-              <p className="copy">© {year} ГКБ №7. Все права защищены</p>
-            </motion.div>
-          </div>
-        </div>
-      </footer>
-    </>
+        {/* Нижняя часть (Копирайт и ссылки) */}
+        <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, justifyContent: 'space-between', alignItems: 'center', gap: 2 }}>
+          <Typography variant="body2" color="text.secondary">
+            © {year} ГКБ №7. Все права защищены.
+          </Typography>
+          <Stack direction="row" spacing={3}>
+            <MuiLink component={Link} href="/privacy-policy" color="text.secondary" underline="hover" variant="body2">
+              Политика конфиденциальности
+            </MuiLink>
+            <MuiLink component={Link} href="/terms-of-use" color="text.secondary" underline="hover" variant="body2">
+              Условия использования
+            </MuiLink>
+          </Stack>
+        </Box>
+      </Container>
+    </Box>
   );
 };
 

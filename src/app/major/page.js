@@ -6,15 +6,15 @@ import {
   addProjectAction,
   getAllAdminTemplateAction,
   logout,
-} from "@/store/slices/authSlice";
+} from "../../store/slices/authSlice";
 import { Modal, Box, TextField, Button, Typography } from "@mui/material";
 import leftArrow from "@/../../public/icons/arrow-left-solid.svg";
 import Image from "next/image";
 
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
-const ProjectRender = dynamic(() => import('@/components/projectrender'), { ssr: false });
-const ProjectDetails = dynamic(() => import('@/components/projectdetails'), { ssr: false });
+const ProjectRender = dynamic(() => import('../../components/projectrender'), { ssr: false });
+const ProjectDetails = dynamic(() => import('../../components/projectdetails'), { ssr: false });
 
 import jwt_decode from "jwt-decode";
 

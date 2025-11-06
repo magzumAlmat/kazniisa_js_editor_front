@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getAllProjectDocumentsAction } from "@/store/slices/authSlice";
+import { getAllProjectDocumentsAction } from "../../store/slices/authSlice";
 import {
   Modal,
   Box,
@@ -11,8 +11,8 @@ import {
   MenuItem,
   FormControl,
 } from "@mui/material";
-import DocumentEditor from "@/components/documenteditor";
-import CreateDocument from "@/components/createdocument";
+import DocumentEditor from "../../components/documenteditor";
+import CreateDocument from "../../components/createdocument";
 import ButtonGroup from '@mui/material/ButtonGroup';
 import { color } from "@mui/system";
 import Divider from '@mui/material/Divider';
