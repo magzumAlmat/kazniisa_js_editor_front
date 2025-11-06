@@ -148,32 +148,48 @@ const Footer = () => {
           </Grid>
 
           {/* Колонка 2-5: Карта сайта */}
-          <Grid item xs={12} md={8} lg={9}>
-            <Typography variant="h6" sx={{ mb: 3, fontWeight: 700, color: 'text.primary' }}>
-              Карта сайта
-            </Typography>
-            <Grid container spacing={2}>
-              {footerLinks.map((column, colIndex) => (
-                <Grid item xs={6} sm={4} md={3} lg={3} key={colIndex}>
-                  <Stack spacing={0.5}>
-                    {column.map((item, itemIndex) => (
-                      <MuiLink
-                        component={Link}
-                        href={item.path}
-                        key={item.path + itemIndex}
-                        color={item.isMain ? 'text.primary' : 'text.secondary'}
-                        underline="hover"
-                        variant="body2"
-                        sx={{ fontWeight: item.isMain ? 600 : 400, ml: item.isMain ? 0 : 1 }}
-                      >
-                        {item.title}
-                      </MuiLink>
-                    ))}
-                  </Stack>
-                </Grid>
-              ))}
-            </Grid>
-          </Grid>
+        <Grid item xs={12} md={8} lg={9}>
+  <Typography
+    variant="h6"
+    sx={{
+      mb: 3,
+      fontWeight: 700,
+      color: 'text.primary',
+      textAlign: 'left', // Выравнивание заголовка слева
+    }}
+  >
+    Карта сайта
+  </Typography>
+
+  <Grid container spacing={2}>
+    {footerLinks.map((column, colIndex) => (
+      <Grid item xs={6} sm={4} md={3} lg={3} key={colIndex}>
+        <Stack spacing={0.5} alignItems="flex-start">
+          {column.map((item, itemIndex) => (
+            <MuiLink
+              component={Link}
+              href={item.path}
+              key={item.path + itemIndex}
+              color={item.isMain ? 'text.primary' : 'text.secondary'}
+              underline="hover"
+              variant="body2"
+              sx={{
+                fontWeight: item.isMain ? 600 : 400,
+                ml: item.isMain ? 0 : 1,
+                textAlign: 'left', // Выравнивание текста слева
+                width: '100%',
+              }}
+            >
+              {item.title}
+            </MuiLink>
+          ))}
+        </Stack>
+      </Grid>
+    ))}
+  </Grid>
+</Grid>
+
+
         </Grid>
 
         <Divider sx={{ my: 4 }} />

@@ -114,15 +114,16 @@ export default function RootLayout({ children }) {
                 minHeight: "100vh",
                 // Добавляем отступ сверху, чтобы контент не перекрывался фиксированным Header
                 // 80px - примерный размер Header, можно настроить
-                pt: { xs: '64px', md: '120px' }, 
+                pt: { xs: '0.5rem', md: '1rem' }, 
               }}>
                 
                 {/* Хлебные крошки и отступ. Убираем жесткий padding: '9rem' */}
                 <Box sx={{ 
                   maxWidth: 'xl', 
-                  mx: 'auto', 
+                  mx: 'auto',
+                    
                   px: { xs: 2, md: 3 }, // Адаптивные горизонтальные отступы
-                  py: 0, // Вертикальный отступ
+
                 }}>
                   <Breadcrumbs />
                 </Box>

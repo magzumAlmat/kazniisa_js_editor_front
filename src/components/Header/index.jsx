@@ -463,7 +463,7 @@ export default function Header() {
   return (
     <>
       {/* Верхняя полоса */}
-      <Box sx={{ bgcolor: theme.palette.primary.main, display: { xs: 'none', lg: 'block' } }}>
+      <Box sx={{ bgcolor: theme.palette.primary.main, display: { xs: 'none', lg: 'block' } }} >
         <Container maxWidth={false} sx={{ px: { xs: 2, lg: 3 } }}>
           <Toolbar variant="dense" disableGutters sx={{ minHeight: 44, justifyContent: 'flex-end', gap: 3 }}>
             <Button
@@ -625,6 +625,8 @@ export default function Header() {
           </Typography>
         </Box>
       </Drawer>
+
+      <Divider></Divider>
     </>
   );
 }
