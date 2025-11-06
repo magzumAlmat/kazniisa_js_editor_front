@@ -1,7 +1,7 @@
-export default function OtdeleniyaTravmatologiyaPage() {
+export default function OKlinikePoliklinikaPage() {
   return (
     <div style={{ padding: '2rem' }}>
-      <h1>Травматология</h1>
+      <h1>Поликлиника</h1>
       <p>This page is under construction.</p>
     </div>
   );

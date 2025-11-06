@@ -1,16 +1,8 @@
-import { Container, Typography, Box } from '@mui/material';
-
-export default function Pravila() {
+export default function PacientamPravilaPage() {
   return (
-    <Box sx={{ bgcolor: 'grey.50', minHeight: '100vh', py: 8 }}>
-      <Container maxWidth="lg">
-        <Typography variant="h3" sx={{ mb: 4, fontWeight: 700, color: 'primary.main' }}>
-          Правила посещения
-        </Typography>
-        <Typography variant="body1" color="text.secondary">
-          Правила посещения...
-        </Typography>
-      </Container>
-    </Box>
+    <div style={{ padding: '2rem' }}>
+      <h1>Правила посещения</h1>
+      <p>This page is under construction.</p>
+    </div>
   );
 }
