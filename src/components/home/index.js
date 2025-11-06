@@ -50,7 +50,7 @@ import NewsBlog from '../newsBlog';
 //   { name: "Госпрограмма 2021–2025", url: "https://gkb7.kz/docs/memlekettik_bagdarlama_0.pdf" },
 //   { name: "Тендер №35 (12.8 млн тг)", url: "https://gkb7.kz/docs/tender_35.pdf" },
 // ];
-
+import Map from '../map';
 export default function Main() {
 
 
@@ -62,6 +62,7 @@ export default function Main() {
         <br />
       <Hero />
       <NewsBlog />
+      <Map/>
       {/* <Footer />   */}
       {/* <Brands /> */}
       {/* <Feature /> */}

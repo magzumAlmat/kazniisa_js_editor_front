@@ -5,37 +5,21 @@ import { useState, useEffect } from 'react';
 import {
   Box, Container, Typography, Button, Stack, Grid, Card, CardContent,
   IconButton, Paper, Chip, useTheme, alpha, ImageList, ImageListItem,
-  ImageListItemBar
+  ImageListItemBar, Avatar, Rating
 } from '@mui/material';
 import {
   ChevronLeft, ChevronRight, PlayArrow, VolumeUp,
-  LocalHospital, AccessTime, PeopleAlt
+  LocalHospital, AccessTime, PeopleAlt, Star, AccessibilityNew
 } from '@mui/icons-material';
 import Link from 'next/link';
 
 // === ФУНКЦИЯ ДЛЯ srcset ===
-function srcset(image,size, rows = 1, cols = 1) {
+function srcset(image, size, rows = 1, cols = 1) {
   return {
     src: `${image}?w=${size * cols}&h=${size * rows}&fit=crop&auto=format`,
     srcSet: `${image}?w=${size * cols}&h=${size * rows}&fit=crop&auto=format&dpr=2 2x`,
   };
 }
-
-// === ДАННЫЕ ДЛЯ ImageList (с заглушками) ===
-const itemData = [
-  { img: '/api/placeholder/400/300', title: 'Оборудование', rows: 2, cols: 2 },
-  { img: '/api/placeholder/300/200', title: 'Лаборатория' },
-  { img: '/api/placeholder/300/200', title: 'Хирургия' },
-  { img: '/api/placeholder/400/200', title: 'Реабилитация', cols: 2 },
-  { img: '/api/placeholder/400/300', title: 'Специалисты', cols: 2 },
-  { img: '/api/placeholder/400/300', title: 'Пациенты', rows: 2, cols: 2 },
-  { img: '/api/placeholder/300/200', title: 'Консультация' },
-  { img: '/api/placeholder/300/200', title: 'Анализы' },
-  { img: '/api/placeholder/400/300', title: 'Диагностика', rows: 2, cols: 2 },
-  { img: '/api/placeholder/300/200', title: 'Операционная' },
-  { img: '/api/placeholder/300/200', title: 'Палата' },
-  { img: '/api/placeholder/400/200', title: 'Фасад', cols: 2 },
-];
 
 export default function Hero() {
   const theme = useTheme();
@@ -55,6 +39,27 @@ export default function Hero() {
     { title: "Урологическое отделение", text: "Полный спектр урологических операций", icon: <PeopleAlt fontSize="large" /> }
   ];
 
+  const team = [
+    { name: "Доктор Иванов А.В.", role: "Главный врач", rating: 4.9, avatar: "/api/placeholder/80/80" },
+    { name: "Доктор Петрова Е.С.", role: "Хирург", rating: 5.0, avatar: "/api/placeholder/80/80" },
+    { name: "Доктор Сидоров К.П.", role: "Уролог", rating: 4.8, avatar: "/api/placeholder/80/80" },
+  ];
+
+  const reviews = [
+    { name: "Айгуль М.", text: "Спасибо за профессионализм! Операция прошла быстро и без боли.", rating: 5 },
+    { name: "Марат К.", text: "Внимательные врачи, современное оборудование. Рекомендую!", rating: 5 },
+    { name: "Гульнара Т.", text: "Онлайн-запись — очень удобно. Доктор принял вовремя.", rating: 4 },
+  ];
+
+  const photos = [
+    { img: '/api/placeholder/400/300', title: 'Оборудование', rows: 2, cols: 2 },
+    { img: '/api/placeholder/300/200', title: 'Лаборатория' },
+    { img: '/api/placeholder/300/200', title: 'Хирургия' },
+    { img: '/api/placeholder/400/200', title: 'Реабилитация', cols: 2 },
+    { img: '/api/placeholder/400/300', title: 'Специалисты', cols: 2 },
+    { img: '/api/placeholder/400/300', title: 'Пациенты', rows: 2, cols: 2 },
+  ];
+
   useEffect(() => {
     const timer = setInterval(() => {
       setSlide((prev) => (prev + 1) % slides.length);
@@ -68,37 +73,34 @@ export default function Hero() {
   return (
     <Box component="section" sx={{ bgcolor: 'grey.50' }}>
 
-      {/* === СЛАЙДЕР НА ВСЮ ШИРИНУ === */}
+      {/* === СЛАЙДЕР === */}
       <Box sx={{ position: 'relative', height: { xs: 400, sm: 500, md: 600 }, overflow: 'hidden', mb: 12 }}>
         <Box sx={{ position: 'absolute', inset: 0, bgcolor: 'grey.200', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', color: 'grey.600' }}>
           <LocalHospital sx={{ fontSize: 100, mb: 2, opacity: 0.3 }} />
           <Typography variant="h5" sx={{ fontWeight: 500 }}>Слайд {slide + 1}</Typography>
-          <Typography variant="body2" sx={{ opacity: 0.7 }}>Заглушка изображения</Typography>
         </Box>
 
         <Box sx={{ position: 'absolute', inset: 0, bgcolor: 'linear-gradient(90deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.6) 50%, rgba(0,0,0,0.3) 100%)' }} />
 
-        <Box sx={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', px: { xs: 2, md: 4 } }}>
-          <Container maxWidth="lg">
-            <Box sx={{ color: 'white', maxWidth: 700 }}>
-              <Typography variant="h3" component="h1" sx={{ fontWeight: 700, mb: 2, fontSize: { xs: '2rem', sm: '2.5rem', md: '3.2rem' }, lineHeight: 1.2 }}>
-                {slides[slide].title}
-              </Typography>
-              <Typography variant="body1" sx={{ mb: 4, opacity: 0.95, fontSize: { xs: '1rem', md: '1.1rem' }, lineHeight: 1.6 }}>
-                {slides[slide].text}
-              </Typography>
-              <Button component={Link} href="/zapis-na-priem" variant="contained" size="large" startIcon={<LocalHospital />}
-                sx={{
-                  bgcolor: 'linear-gradient(135deg, #006bff 0%, #0056cc 100%)', color: 'white', px: { xs: 4, md: 5 }, py: 1.8,
-                  borderRadius: 2, fontWeight: 700, fontSize: '1.1rem', textTransform: 'none',
-                  boxShadow: '0 8px 25px rgba(0, 107, 255, 0.3)', transition: 'all 0.3s ease',
-                  '&:hover': { bgcolor: 'linear-gradient(135deg, #0056cc 0%, #004099 100%)', boxShadow: '0 12px 30px rgba(0, 107, 255, 0.4)', transform: 'translateY(-3px)' }
-                }}>
-                Записаться на приём
-              </Button>
-            </Box>
-          </Container>
-        </Box>
+        <Container maxWidth="lg" sx={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center' }}>
+          <Box sx={{ color: 'white', maxWidth: 700 }}>
+            <Typography variant="h3" component="h1" sx={{ fontWeight: 700, mb: 2, fontSize: { xs: '2rem', sm: '2.5rem', md: '3.2rem' }, lineHeight: 1.2 }}>
+              {slides[slide].title}
+            </Typography>
+            <Typography variant="body1" sx={{ mb: 4, opacity: 0.95, fontSize: { xs: '1rem', md: '1.1rem' }, lineHeight: 1.6 }}>
+              {slides[slide].text}
+            </Typography>
+            <Button component={Link} href="/zapis-na-priem" variant="contained" size="large" startIcon={<LocalHospital />}
+              sx={{
+                bgcolor: 'linear-gradient(135deg, #006bff 0%, #0056cc 100%)', color: 'white', px: { xs: 4, md: 5 }, py: 1.8,
+                borderRadius: 2, fontWeight: 700, fontSize: '1.1rem', textTransform: 'none',
+                boxShadow: '0 8px 25px rgba(0, 107, 255, 0.3)', transition: 'all 0.3s ease',
+                '&:hover': { bgcolor: 'linear-gradient(135deg, #0056cc 0%, #004099 100%)', boxShadow: '0 12px 30px rgba(0, 107, 255, 0.4)', transform: 'translateY(-3px)' }
+              }}>
+              Записаться на приём
+            </Button>
+          </Box>
+        </Container>
 
         <IconButton onClick={prevSlide} sx={{ position: 'absolute', left: 0, top: 0, height: '100%', width: { xs: 60, md: 80 }, borderRadius: 0, bgcolor: 'rgba(0,0,0,0.4)', color: 'white', '&:hover': { bgcolor: 'rgba(0,0,0,0.6)' }, zIndex: 10 }} size="large">
           <ChevronLeft sx={{ fontSize: { xs: 32, md: 40 } }} />
@@ -115,88 +117,76 @@ export default function Hero() {
         </Stack>
       </Box>
 
-      {/* === ImageList — ИСПРАВЛЕННЫЙ, С ПОДПИСЯМИ === */}
-      <Container maxWidth="lg" sx={{ mb: 8 }}>
+      <Container maxWidth="lg" sx={{ pb: 10 }}>
+
+        {/* === НАША КОМАНДА === */}
+        <Typography variant="h4" sx={{ mb: 5, fontWeight: 700, textAlign: 'center', color: 'text.primary' }}>
+          Наша команда
+        </Typography>
+        <Grid container spacing={4} sx={{ mb: 8 }}>
+          {team.map((member, i) => (
+            <Grid item xs={12} sm={6} md={4} key={i}>
+              <Card elevation={0} sx={{ textAlign: 'center', p: 3, border: '1px solid', borderColor: 'grey.200', borderRadius: 3 }}>
+                <Avatar
+                  src={member.avatar}
+                  alt={member.name}
+                  sx={{ width: 100, height: 100, mx: 'auto', mb: 2, border: '4px solid', borderColor: 'primary.main' }}
+                />
+                <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>{member.name}</Typography>
+                <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>{member.role}</Typography>
+                <Rating value={member.rating} readOnly precision={0.1} size="small" />
+              </Card>
+            </Grid>
+          ))}
+        </Grid>
+
+        {/* === ОТЗЫВЫ ПАЦИЕНТОВ === */}
+        <Typography variant="h4" sx={{ mb: 5, fontWeight: 700, textAlign: 'center', color: 'text.primary' }}>
+          Отзывы пациентов
+        </Typography>
+        <Grid container spacing={4} sx={{ mb: 8 }}>
+          {reviews.map((review, i) => (
+            <Grid item xs={12} md={4} key={i}>
+              <Paper elevation={0} sx={{ p: 3, border: '1px solid', borderColor: 'grey.200', borderRadius: 3, height: '100%' }}>
+                <Stack direction="row" spacing={1} sx={{ mb: 2 }}>
+                  {[...Array(review.rating)].map((_, j) => (
+                    <Star key={j} sx={{ color: 'warning.main', fontSize: 20 }} />
+                  ))}
+                </Stack>
+                <Typography variant="body1" sx={{ mb: 2, fontStyle: 'italic' }}>"{review.text}"</Typography>
+                <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 600 }}>- {review.name}</Typography>
+              </Paper>
+            </Grid>
+          ))}
+        </Grid>
+
+        {/* === ФОТО ИЗ ЖИЗНИ БОЛЬНИЦЫ === */}
         <Typography variant="h4" sx={{ mb: 4, fontWeight: 700, textAlign: 'center', color: 'text.primary' }}>
           Фото из жизни больницы
         </Typography>
-
-        <ImageList
-          variant="quilted"
-          cols={4}
-          rowHeight={160}
-          gap={12}
-          sx={{
-            borderRadius: 2,
-            overflow: 'hidden',
-            bgcolor: 'background.paper',
-            p: 1,
-            boxShadow: 1,
-          }}
-        >
-          {itemData.map((item) => (
+        <ImageList variant="quilted" cols={4} rowHeight={160} gap={12} sx={{ borderRadius: 2, overflow: 'hidden', bgcolor: 'background.paper', p: 1, boxShadow: 1, mb: 8 }}>
+          {photos.map((item) => (
             <ImageListItem key={item.img} cols={item.cols || 1} rows={item.rows || 1}>
-              {/* ИСПРАВЛЕНО: img без детей */}
               <Box
                 component="img"
                 {...srcset(item.img, 160, item.rows, item.cols)}
                 alt={item.title}
                 loading="lazy"
-                sx={{
-                  width: '100%',
-                  height: '100%',
-                  objectFit: 'cover',
-                  bgcolor: 'grey.300',
-                }}
+                sx={{ width: '100%', height: '100%', objectFit: 'cover', bgcolor: 'grey.300' }}
               />
-              {/* ПОДПИСЬ ПОД ФОТО */}
               <ImageListItemBar
                 title={item.title}
                 position="below"
-                sx={{
-                  '& .MuiImageListItemBar-title': {
-                    fontSize: '0.875rem',
-                    fontWeight: 600,
-                    color: 'text.primary',
-                    textAlign: 'center',
-                    py: 0.5,
-                  },
-                }}
+                sx={{ '& .MuiImageListItemBar-title': { fontSize: '0.875rem', fontWeight: 600, color: 'text.primary', textAlign: 'center', py: 0.5 } }}
               />
             </ImageListItem>
           ))}
         </ImageList>
-      </Container>
 
-      {/* === ОСТАЛЬНОЕ В КОНТЕЙНЕРЕ === */}
-      <Container maxWidth="lg" sx={{ pb: 10 }}>
-        {/* ГОРИЗОНТАЛЬНОЕ МЕНЮ */}
-        <Paper elevation={0} sx={{ borderRadius: 2, overflow: 'hidden', mb: 8, bgcolor: 'primary.main', color: 'white' }}>
-          <Grid container>
-            {[
-              { icon: <LocalHospital sx={{ fontSize: 32 }} />, title: "Прикрепление к поликлинике", href: "/pacientam/prikreplenie" },
-              { icon: <AccessTime sx={{ fontSize: 32 }} />, title: "Запись на прием к врачу", href: "/zapis-na-priem" },
-              { icon: <PeopleAlt sx={{ fontSize: 32 }} />, title: "Вызов врача на дом", href: "/pacientam/vyzov-vracha" },
-              { icon: <VolumeUp sx={{ fontSize: 32 }} />, title: "Заказать рецепт онлайн", href: "/pacientam/retsept" },
-            ].map((item, i) => (
-              <Grid item xs={6} sm={3} key={i} component={Link} href={item.href}
-                sx={{
-                  textDecoration: 'none', color: 'inherit', p: { xs: 2, sm: 3 }, textAlign: 'center',
-                  borderRight: i < 3 ? '1px solid' : 'none', borderRightColor: 'rgba(255,255,255,0.2)',
-                  bgcolor: i % 2 === 0 ? 'primary.dark' : 'primary.main', transition: 'all 0.2s ease',
-                  '&:hover': { bgcolor: 'primary.dark', transform: 'translateY(-2px)' }
-                }}>
-                <Box sx={{ mb: 1 }}>{item.icon}</Box>
-                <Typography variant="body2" sx={{ fontWeight: 500, fontSize: { xs: '0.85rem', sm: '1rem' }, lineHeight: 1.3 }}>
-                  {item.title}
-                </Typography>
-              </Grid>
-            ))}
-          </Grid>
-        </Paper>
-
-        {/* УСЛУГИ */}
-        <Typography variant="h4" sx={{ mb: 5, fontWeight: 700, textAlign: 'center', color: 'text.primary' }}>Наши услуги</Typography>
+        {/* === УСЛУГИ === */}
+        <Typography variant="h4" sx={{ mb: 5, fontWeight: 700, textAlign: 'center', color: 'text.primary' }}>
+          Наши услуги
+        </Typography>
         <Grid container spacing={4} sx={{ mb: 8 }}>
           {services.map((service, i) => (
             <Grid item xs={12} md={4} key={i}>
@@ -211,25 +201,25 @@ export default function Hero() {
           ))}
         </Grid>
 
-        {/* ЖЕСТОВЫЙ ЯЗЫК */}
+        {/* === ЖЕСТОВЫЙ ЯЗЫК === */}
         <Paper elevation={0} sx={{ border: '1px solid', borderColor: 'grey.200', borderRadius: 3, p: { xs: 4, md: 5 }, mb: 8, bgcolor: 'primary.50' }}>
           <Grid container spacing={4} alignItems="center">
             <Grid item xs={12} md={8}>
               <Chip label="Доступность" size="small" color="primary" sx={{ mb: 2 }} />
               <Typography variant="h5" sx={{ fontWeight: 600, mb: 2 }}>Онлайн-услуга жестового языка</Typography>
               <Typography variant="body1" color="text.secondary">
-                Больница была построена в 1991 году как медицинское учреждение на случай... Услуга доступна для пациентов с нарушениями слуха.
+                Услуга доступна для пациентов с нарушениями слуха. Подключитесь через кнопку ниже.
               </Typography>
             </Grid>
             <Grid item xs={12} md={4} sx={{ textAlign: { xs: 'center', md: 'right' } }}>
-              <Button variant="contained" size="large" startIcon={<VolumeUp />} sx={{ borderRadius: 2, px: 5, py: 1.5, fontWeight: 600, textTransform: 'none' }}>
+              <Button variant="contained" size="large" startIcon={<AccessibilityNew />} sx={{ borderRadius: 2, px: 5, py: 1.5, fontWeight: 600, textTransform: 'none' }}>
                 Подключиться
               </Button>
             </Grid>
           </Grid>
         </Paper>
 
-        {/* ВИДЕО */}
+        {/* === ВИДЕО === */}
         <Box sx={{ textAlign: 'center', mb: 8 }}>
           <Typography variant="h5" sx={{ mb: 4, fontWeight: 600 }}>Больше видеоматериалов</Typography>
           <Paper elevation={0} sx={{ position: 'relative', height: { xs: 240, md: 380 }, borderRadius: 3, overflow: 'hidden', border: '1px solid', borderColor: 'grey.200', bgcolor: 'grey.200' }}>
@@ -245,7 +235,7 @@ export default function Hero() {
           </Paper>
         </Box>
 
-        {/* ФУТЕР */}
+        {/* === ФУТЕР === */}
         <Paper elevation={0} sx={{ borderTop: '1px solid', borderColor: 'grey.200', pt: 5 }}>
           <Grid container spacing={4} alignItems="center">
             <Grid item xs={12} md={6}>

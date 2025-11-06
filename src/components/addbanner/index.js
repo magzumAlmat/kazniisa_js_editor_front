@@ -48,7 +48,7 @@ import { useRef } from 'react';
 import { addCompanyAction } from '@/store/slices/authSlice';
 import { addBannerAction, getAllCompanies } from '@/store/slices/authSlice';
 
-import { GisMap } from '../map';
+import { GisMap } from '../Map';
 
 import { useDropzone } from 'react-dropzone';
 export default function AddBanner() {
