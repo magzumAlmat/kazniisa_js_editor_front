@@ -1,10 +1,24 @@
 'use client';
 import React, { useState } from 'react';
-import {
-  AppBar, Toolbar, Typography, IconButton, Drawer, List, ListItem,
-  ListItemIcon, ListItemText, Divider, Box, Grid, Card, CardContent,
-  CardMedia, Button, Chip, TextField, InputAdornment
-} from '@mui/material';
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
+import IconButton from '@mui/material/IconButton';
+import Drawer from '@mui/material/Drawer';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import Divider from '@mui/material/Divider';
+import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import CardMedia from '@mui/material/CardMedia';
+import Button from '@mui/material/Button';
+import Chip from '@mui/material/Chip';
+import TextField from '@mui/material/TextField';
+import InputAdornment from '@mui/material/InputAdornment';
 import {
   Menu as MenuIcon, Home, Info, People, MedicalServices, Phone,
   VideoLibrary, AttachFile, Search
@@ -22,7 +36,7 @@ import Testimonial from '../Testimonial';
 import Pricing from '../Pricing';
 import Contact from '../Contact';
 import Blog from '../Blog';
-import { Container } from '@mui/material';
+
 import NewsBlog from '../newsBlog';
 // // === ДАННЫЕ ИЗ САЙТА ГКБ №7 ===
 // const menuItems = [
@@ -59,14 +73,12 @@ export default function Main() {
   return (
     <div>
   
-        <br />
-        <br />
-        <br />
-        <br />
+      
         
       <Hero />
       <NewsBlog />
       <Map/>
+
       {/* <Footer />   */}
       {/* <Brands /> */}
       {/* <Feature /> */}

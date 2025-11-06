@@ -5,10 +5,17 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllPublicDocumentsAction } from '../../store/slices/authSlice';
 import Link from 'next/link';
-import {
-  Box, Container, Typography, List, ListItem, ListItemText,
-  ListItemButton, Divider, Chip, Stack, useTheme
-} from '@mui/material';
+import Box from '@mui/material/Box';
+import Container from '@mui/material/Container';
+import Typography from '@mui/material/Typography';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
+import ListItemButton from '@mui/material/ListItemButton';
+import Divider from '@mui/material/Divider';
+import Chip from '@mui/material/Chip';
+import Stack from '@mui/material/Stack';
+import { useTheme } from '@mui/material/styles';
 import { AccessTime, ChevronRight } from '@mui/icons-material';
 
 // --- ПОМОЩНИКИ ---
@@ -84,6 +91,7 @@ export default function NewsBlog() {
                         {news.document_name || 'Без заголовка'}
                       </Typography>
                     }
+                    secondaryTypographyProps={{ component: 'div' }}
                     secondary={
                       <Box>
                         {/* ИСПРАВЛЕНО: вместо <p> используем Box + Typography */}

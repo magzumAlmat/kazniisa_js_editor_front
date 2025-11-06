@@ -1,34 +1,112 @@
-// src/components/Header/index.tsx
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import {
   AppBar, Toolbar, Container, IconButton, Drawer, List, ListItemButton,
-  ListItemText, Box, Button,  useTheme, alpha,
+  ListItemText, Box, Button, useTheme, alpha, Collapse, Typography,
+  Grid, Paper, InputBase, Divider,
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
-import Image from 'next/image';
+import SearchIcon from '@mui/icons-material/Search';
+import PhoneIcon from '@mui/icons-material/Phone';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { styled } from '@mui/material/styles';
+import Image from 'next/image';
 import * as React from 'react';
 
-import ListSubheader from '@mui/material/ListSubheader';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
+// === 1. СТИЛИЗОВАННЫЕ КОМПОНЕНТЫ ===
 
-
-
-const StyledListHeader = styled(ListSubheader)(({ theme }) => ({
-  backgroundColor: theme.palette.mode === 'light' ? '#f5f5f5' : '#333',
-  color: theme.palette.text.primary,
-  fontWeight: 600,
-  fontSize: '0.875rem',
-  lineHeight: '2rem',
-  textTransform: 'uppercase',
-  letterSpacing: '0.5px',
+// Стилизованный контейнер для Mega Menu
+const MegaMenuContainer = styled(Paper)(({ theme }) => ({
+  position: 'absolute',
+  top: '100%',
+  left: '50%',
+  transform: 'translateX(-50%)',
+  zIndex: theme.zIndex.appBar - 1,
+  width: '100%',
+  maxWidth: 1200, // Ограничение ширины для лучшего восприятия
+  padding: theme.spacing(3),
+  borderRadius: theme.shape.borderRadius * 2,
+  boxShadow: theme.shadows[10],
+  borderTop: `4px solid ${theme.palette.primary.main}`,
+  display: 'flex',
+  flexDirection: 'column',
+  gap: theme.spacing(2),
+  backgroundColor: theme.palette.background.paper,
 }));
+
+// Стилизованный заголовок группы в Mega Menu
+const GroupTitle = styled(Typography)(({ theme }) => ({
+  fontWeight: 700,
+  fontSize: '1rem',
+  color: theme.palette.primary.main,
+  marginBottom: theme.spacing(1),
+  borderBottom: `1px solid ${theme.palette.divider}`,
+  paddingBottom: theme.spacing(0.5),
+}));
+
+// Стилизованный элемент ссылки в Mega Menu
+const MegaMenuItem = styled(Link)(({ theme }) => ({
+  display: 'block',
+  textDecoration: 'none',
+  color: theme.palette.text.primary,
+  padding: theme.spacing(0.5, 1),
+  borderRadius: theme.shape.borderRadius,
+  transition: 'background-color 0.2s, color 0.2s',
+  '&:hover': {
+    backgroundColor: alpha(theme.palette.primary.main, 0.1),
+    color: theme.palette.primary.dark,
+  },
+}));
+
+// Стилизованный компонент поиска
+const SearchBox = styled('div')(({ theme }) => ({
+  position: 'relative',
+  borderRadius: theme.shape.borderRadius * 2,
+  backgroundColor: alpha(theme.palette.common.white, 0.15),
+  '&:hover': {
+    backgroundColor: alpha(theme.palette.common.white, 0.25),
+  },
+  marginLeft: 0,
+  width: '100%',
+  [theme.breakpoints.up('sm')]: {
+    marginLeft: theme.spacing(1),
+    width: 'auto',
+  },
+  border: `1px solid ${theme.palette.divider}`,
+  backgroundColor: theme.palette.mode === 'light' ? theme.palette.grey[50] : theme.palette.grey[800],
+}));
+
+const SearchIconWrapper = styled('div')(({ theme }) => ({
+  padding: theme.spacing(0, 2),
+  height: '100%',
+  position: 'absolute',
+  pointerEvents: 'none',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  color: theme.palette.text.secondary,
+}));
+
+const StyledInputBase = styled(InputBase)(({ theme }) => ({
+  color: 'inherit',
+  '& .MuiInputBase-input': {
+    padding: theme.spacing(1, 1, 1, 0),
+    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
+    transition: theme.transitions.create('width'),
+    width: '100%',
+    [theme.breakpoints.up('sm')]: {
+      width: '12ch',
+      '&:focus': {
+        width: '20ch',
+      },
+    },
+  },
+}));
+
+// === 2. ДАННЫЕ МЕНЮ (Используем оригинальные данные) ===
 
 const menuData = [
   { title: "Главная", path: "/" },
@@ -138,6 +216,9 @@ const menuData = [
       { title: "Гинекологические операции", path: "/uslugi/operacii/ginekologicheskie", group: "Операции" },
       { title: "Отделение Нейроонкологии", path: "/uslugi/operacii/neiroonkologiya", group: "Операции" },
 
+      { title: "Лучевая диагностика (КТ, МРТ, УЗИ)", path: "/uslugi/laboratoriya/luchevaya-diagnostika", group: "Диагностика" },
+      { title: "Функциональная диагностика", path: "/uslugi/laboratoriya/funkcionalnaya-diagnostika", group: "Диагностика" },
+
       { title: "Дарсонвализация", path: "/uslugi/fizioterapiya/darsonvalizaciya", group: "Физиотерапия" },
       { title: "Магнитотерапия", path: "/uslugi/fizioterapiya/magnitoterapiya", group: "Физиотерапия" },
       { title: "Ультрафиолетовое излучение (УФО)", path: "/uslugi/fizioterapiya/ufo", group: "Физиотерапия" },
@@ -149,9 +230,6 @@ const menuData = [
       { title: "Подводное вытяжение позвоночника ЛИВ", path: "/uslugi/fizioterapiya/podvodnoye-vytyazheniye", group: "Физиотерапия" },
       { title: "Гидромассажные ванны", path: "/uslugi/fizioterapiya/gidromassazhnye-vanny", group: "Физиотерапия" },
       { title: "Электросон", path: "/uslugi/fizioterapiya/elektroson", group: "Физиотерапия" },
-
-      { title: "Лучевая диагностика (КТ, МРТ, УЗИ)", path: "/uslugi/laboratoriya/luchevaya-diagnostika", group: "Лаборатория" },
-      { title: "Функциональная диагностика", path: "/uslugi/laboratoriya/funkcionalnaya-diagnostika", group: "Лаборатория" },
 
       { title: "Стоматологические услуги", path: "/uslugi/stomatologiya", group: "Прочее" },
       { title: "Прейскурант цен", path: "/uslugi/preyskurant", group: "Прочее" },
@@ -174,8 +252,8 @@ const menuData = [
       { title: "Реестр государственных услуг", path: "/gosuslugi/reestr", group: "Документы" },
       { title: "Нормативно-правовые акты", path: "/gosuslugi/normativy", group: "Документы" },
       { title: "Порядок обжалования", path: "/gosuslugi/obzhalovanie", group: "Права" },
-      { title: "Информационные материалы", path: "/gosuslugi/materialy", group: "Информация" },
-      { title: "Отчет по оказанным государственным услугам", path: "/gosuslugi/otchet", group: "Отчетность" },
+      { title: "Стандарты государственных услуг", path: "/gosuslugi/standarty", group: "Документы" },
+      { title: "Общественный совет", path: "/gosuslugi/sovet", group: "Прозрачность" },
     ]
   },
   {
@@ -215,14 +293,133 @@ const menuData = [
   { title: "Контакты", path: "/kontakty" },
 ];
 
+// === 3. ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ===
+
+// Функция для группировки элементов меню
+const groupMenuItems = (items) => {
+  return items.reduce((acc, item) => {
+    const group = item.group || 'Без группы';
+    if (!acc[group]) acc[group] = [];
+    acc[group].push(item);
+    return acc;
+  }, {});
+};
+
+// === 4. КОМПОНЕНТЫ МЕНЮ ===
+
+// Компонент для отображения Mega Menu (Десктоп)
+const DesktopMegaMenu = React.memo(({ items, closeMenu }) => {
+  const groupedItems = useMemo(() => groupMenuItems(items), [items]);
+  const theme = useTheme();
+
+  // Определяем количество колонок. Максимум 4, но не больше, чем количество групп.
+  const numGroups = Object.keys(groupedItems).length;
+  const numColumns = Math.min(4, numGroups);
+
+  return (
+    <Grid container spacing={3}>
+      {Object.entries(groupedItems).map(([group, groupItems]) => (
+        <Grid item xs={12} sm={6} md={12 / numColumns} key={group}>
+          <GroupTitle>{group}</GroupTitle>
+          <List disablePadding dense>
+            {groupItems.map((item) => (
+              <React.Fragment key={item.path}>
+                <MegaMenuItem href={item.path} onClick={closeMenu}>
+                  <ListItemText primary={item.title} sx={{ m: 0 }} />
+                </MegaMenuItem>
+                {/* Обработка вложенных подменю (2-й уровень) */}
+                {item.submenu && (
+                  <Box sx={{ pl: 1, borderLeft: `2px solid ${alpha(theme.palette.primary.main, 0.3)}`, ml: 1 }}>
+                    {item.submenu.map(subItem => (
+                      <MegaMenuItem key={subItem.path} href={subItem.path} onClick={closeMenu} sx={{ fontSize: '0.875rem', py: 0.25 }}>
+                        <ListItemText primary={subItem.title} sx={{ m: 0 }} />
+                      </MegaMenuItem>
+                    ))}
+                  </Box>
+                )}
+              </React.Fragment>
+            ))}
+          </List>
+        </Grid>
+      ))}
+    </Grid>
+  );
+});
+DesktopMegaMenu.displayName = 'DesktopMegaMenu';
+
+
+// Компонент для отображения мобильного меню (Drawer)
+const MobileMenuItem = ({ item, depth = 0, toggleDrawer }) => {
+  const [open, setOpen] = useState(false);
+  const pathname = usePathname();
+  const theme = useTheme();
+
+  const isActive = (path) => {
+    if (!path) return false;
+    return pathname === path || (path !== '/' && pathname.startsWith(path));
+  };
+
+  const active = isActive(item.path);
+
+  const handleClick = (e) => {
+    if (item.submenu) {
+      e.preventDefault();
+      setOpen(!open);
+    } else {
+      toggleDrawer(false)();
+    }
+  };
+
+  return (
+    <Box>
+      <ListItemButton
+        component={Link}
+        href={item.path}
+        onClick={handleClick}
+        selected={active && !open}
+        sx={{
+          pl: 2 + depth * 2,
+          pr: 2,
+          py: 1.5,
+          borderRadius: 1,
+          mb: 0.5,
+          '&.Mui-selected': {
+            bgcolor: alpha(theme.palette.primary.main, 0.1),
+            color: 'primary.main',
+            fontWeight: 600,
+          },
+          '&:hover': {
+            bgcolor: alpha(theme.palette.primary.main, 0.05),
+          }
+        }}
+      >
+        <ListItemText primary={item.title} primaryTypographyProps={{ fontWeight: active ? 600 : 500 }} />
+        {item.submenu && (
+          <KeyboardArrowDown sx={{ transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }} />
+        )}
+      </ListItemButton>
+
+      {item.submenu && (
+        <Collapse in={open} timeout="auto" unmountOnExit>
+          <List component="div" disablePadding sx={{ bgcolor: alpha(theme.palette.grey[500], 0.05), borderLeft: `3px solid ${alpha(theme.palette.primary.main, 0.5)}`, ml: 2, mb: 1, borderRadius: 1 }}>
+            {item.submenu.map(sub => (
+              <MobileMenuItem key={sub.path} item={sub} depth={depth + 1} toggleDrawer={toggleDrawer} />
+            ))}
+          </List>
+        </Collapse>
+      )}
+    </Box>
+  );
+};
+
+// === 5. ГЛАВНЫЙ КОМПОНЕНТ HEADER ===
+
 export default function Header() {
   const theme = useTheme();
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [sticky, setSticky] = useState(false);
-  const [anchorEl, setAnchorEl] = useState(null);
-  const [activeMenu, setActiveMenu] = useState(null);
-  const [openSubmenus, setOpenSubmenus] = useState({});
+  const [activeMenu, setActiveMenu] = useState(null); // Хранит title активного меню для Mega Menu
 
   useEffect(() => {
     const handleScroll = () => setSticky(window.scrollY > 50);
@@ -230,15 +427,12 @@ export default function Header() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const openMenu = (event, title) => {
-    setAnchorEl(event.currentTarget);
+  const openMenu = (title) => {
     setActiveMenu(title);
   };
 
   const closeMenu = () => {
-    setAnchorEl(null);
     setActiveMenu(null);
-    setOpenSubmenus({});
   };
 
   const toggleDrawer = (open) => () => {
@@ -250,13 +444,6 @@ export default function Header() {
     return pathname === path || (path !== '/' && pathname.startsWith(path));
   };
 
-  const toggleSubmenu = (path) => {
-    setOpenSubmenus(prev => ({
-      ...prev,
-      [path]: !prev[path]
-    }));
-  };
-
   const NavButton = ({ item }) => {
     const active = isActive(item.path);
 
@@ -265,7 +452,8 @@ export default function Header() {
         component={Link}
         href={item.path}
         endIcon={item.submenu ? <KeyboardArrowDown /> : null}
-        onMouseEnter={item.submenu ? (e) => openMenu(e, item.title) : undefined}
+        onMouseEnter={() => item.submenu && openMenu(item.title)}
+        onClick={item.submenu ? (e) => e.preventDefault() : closeMenu}
         sx={{
           color: active ? 'primary.main' : 'text.primary',
           fontWeight: active ? 600 : 500,
@@ -275,6 +463,8 @@ export default function Header() {
           py: 1,
           borderRadius: 1,
           cursor: 'pointer',
+          transition: 'all 0.2s ease',
+          position: 'relative',
           '&:hover': {
             bgcolor: alpha(theme.palette.primary.main, 0.08),
             color: 'primary.main',
@@ -286,203 +476,167 @@ export default function Header() {
     );
   };
 
-  const DesktopMenuItem = ({ items, depth = 0 }) => {
-    const groups = items.reduce((acc, item) => {
-      const group = item.group || 'Без группы';
-      if (!acc[group]) acc[group] = [];
-      acc[group].push(item);
-      return acc;
-    }, {});
-
-    return (
-      <>
-        {Object.entries(groups).map(([group, groupItems]) => (
-          <React.Fragment key={group}>
-            {depth === 0 && (
-              <StyledListHeader>{group}</StyledListHeader>
-            )}
-            {groupItems.map((item) => (
-              <Box key={item.path}>
-                <MenuItem
-                  component={item.submenu ? 'div' : Link}
-                  href={item.submenu ? undefined : item.path}
-                  onClick={(e) => {
-                    if (item.submenu) e.preventDefault();
-                    else closeMenu();
-                  }}
-                  onMouseEnter={() => item.submenu && toggleSubmenu(item.path)}
-                  sx={{
-                    pl: 3 + depth * 2,
-                    pr: 2,
-                    py: 1.2,
-                    fontSize: '0.95rem',
-                    '&:hover': { bgcolor: alpha(theme.palette.primary.main, 0.05) },
-                  }}
-                >
-                  <ListItemText primary={item.title} />
-                  {item.submenu && (
-                    <KeyboardArrowDown
-                      sx={{
-                        ml: 'auto',
-                        transform: openSubmenus[item.path] ? 'rotate(180deg)' : 'none',
-                        transition: 'transform 0.2s',
-                        fontSize: 18,
-                      }}
-                    />
-                  )}
-                </MenuItem>
-
-                {item.submenu && openSubmenus[item.path] && (
-                  <Box sx={{ pl: 2, bgcolor: 'grey.50' }}>
-                    <DesktopMenuItem items={item.submenu} depth={depth + 1} />
-                  </Box>
-                )}
-              </Box>
-            ))}
-          </React.Fragment>
-        ))}
-      </>
-    );
-  };
-
-  const MobileMenuItem = ({ item, depth = 0 }) => {
-    const [open, setOpen] = useState(false);
-    const active = isActive(item.path);
-
-    return (
-      <Box>
-        <ListItemButton
-          component={Link}
-          href={item.path}
-          onClick={(e) => {
-            if (item.submenu) {
-              e.preventDefault();
-              setOpen(!open);
-            } else {
-              toggle1Drawer(false)();
-            }
-          }}
-          selected={active && !open}
-          sx={{
-            pl: 2 + depth * 2,
-            pr: 2,
-            py: 1.5,
-            borderRadius: 2,
-            mb: 0.5,
-            '&.Mui-selected': {
-              bgcolor: alpha(theme.palette.primary.main, 0.1),
-              color: 'primary.main',
-              fontWeight: 600,
-            },
-          }}
-        >
-          <ListItemText primary={item.title} />
-          {item.submenu && (
-            <KeyboardArrowDown sx={{ transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }} />
-          )}
-        </ListItemButton>
-
-        {item.submenu && (
-          <Collapse in={open} timeout="auto" unmountOnExit>
-            <List component="div" disablePadding sx={{ bgcolor: alpha(theme.palette.grey[500], 0.1), borderRadius: 2, mb: 1 }}>
-              {item.submenu.map(sub => (
-                <MobileMenuItem key={sub.path} item={sub} depth={depth + 1} />
-              ))}
-            </List>
-          </Collapse>
-        )}
-      </Box>
-    );
-  };
-
   return (
     <>
+      {/* Верхняя полоса с контактами и поиском (Только для десктопа) */}
+      <Box sx={{ bgcolor: theme.palette.primary.main, display: { xs: 'none', md: 'block' } }}>
+        <Container maxWidth="xl">
+          <Toolbar variant="dense" disableGutters sx={{ minHeight: 40, justifyContent: 'flex-end', gap: 3 }}>
+            <Button
+              component={Link}
+              href="/zapis-na-priem"
+              variant="contained"
+              size="small"
+              sx={{
+                bgcolor: theme.palette.secondary.main,
+                color: theme.palette.secondary.contrastText,
+                fontWeight: 600,
+                '&:hover': { bgcolor: theme.palette.secondary.dark },
+              }}
+            >
+              Записаться на приём
+            </Button>
+            <Box sx={{ display: 'flex', alignItems: 'center', color: 'white', gap: 1 }}>
+              <PhoneIcon fontSize="small" />
+              <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                +7 (727) 270-86-00
+              </Typography>
+            </Box>
+            <SearchBox>
+              <SearchIconWrapper>
+                <SearchIcon />
+              </SearchIconWrapper>
+              <StyledInputBase
+                placeholder="Поиск..."
+                inputProps={{ 'aria-label': 'search' }}
+              />
+            </SearchBox>
+          </Toolbar>
+        </Container>
+      </Box>
+
+      {/* Основной Header */}
       <AppBar
-        position="fixed"
+        position="sticky" // Изменено на sticky для лучшего UX
         color="inherit"
         elevation={sticky ? 4 : 0}
         sx={{
-          bgcolor: sticky ? 'background.paper' : 'transparent',
+          bgcolor: sticky ? 'background.paper' : 'background.paper', // Всегда белый/бумажный фон
           transition: 'all 0.3s ease',
-          py: sticky ? 0.5 : 1.5,
+          py: sticky ? 0.5 : 1,
           boxShadow: sticky ? '0 4px 20px rgba(0,0,0,0.08)' : 'none',
+          zIndex: theme.zIndex.appBar,
         }}
       >
         <Container maxWidth="xl">
-          <Toolbar disableGutters sx={{ justifyContent: 'space-between', minHeight: { xs: 64, md: 80 } }}>
+          <Toolbar disableGutters sx={{ justifyContent: 'space-between', minHeight: { xs: 64, md: 70 } }}>
+            {/* Логотип */}
             <Link href="/" passHref>
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
                 <Image
-                  src="/images/logo/logo.png"
+                  src="/images/logo/logo.png" // Предполагаемый путь к логотипу
                   alt="ГКБ №7"
-                  width={130}
-                  height={80}
+                  width={150} // Увеличенный размер логотипа
+                  height={60}
                   priority
                   style={{ objectFit: 'contain' }}
                 />
               </Box>
             </Link>
 
+            {/* Десктопное меню (Mega Menu) */}
             <Box
-              sx={{ display: { xs: 'none', lg: 'flex' }, alignItems: 'center', gap: 1 }}
+              sx={{ display: { xs: 'none', lg: 'flex' }, alignItems: 'center', gap: 1, position: 'relative' }}
               onMouseLeave={closeMenu}
             >
               {menuData.map((item) => (
-                <Box
-                  key={item.title}
-                  onMouseEnter={item.submenu ? (e) => openMenu(e, item.title) : undefined}
-                >
+                <Box key={item.title} onMouseEnter={() => item.submenu && openMenu(item.title)}>
                   <NavButton item={item} />
-                  {item.submenu && (
-                    <Menu
-                      anchorEl={anchorEl}
-                      open={activeMenu === item.title}
-                      onClose={closeMenu}
-                      disableAutoFocusItem
-                      slotProps={{
-                        paper: {
-                          sx: {
-                            mt: 1,
-                            minWidth: 380,
-                            maxHeight: '75vh',
-                            overflowY: 'auto',
-                            borderRadius: 2,
-                            boxShadow: '0 12px 30px rgba(0,0,0,0.12)',
-                            border: '1px solid',
-                            borderColor: 'grey.200',
-                          },
-                        },
-                        list: { sx: { py: 0 } },
-                      }}
-                    >
-                      <DesktopMenuItem items={item.submenu} />
-                    </Menu>
-                  )}
                 </Box>
+              ))}
+
+              {/* Контейнер для Mega Menu, который отображается при hover */}
+              {menuData.map((item) => item.submenu && (
+                <Collapse
+                  key={`mega-${item.title}`}
+                  in={activeMenu === item.title}
+                  timeout={300}
+                  sx={{
+                    position: 'absolute',
+                    top: '100%',
+                    left: '50%',
+                    transform: 'translateX(-50%)',
+                    width: '100vw',
+                    maxWidth: 1200,
+                    pointerEvents: activeMenu === item.title ? 'auto' : 'none',
+                    zIndex: theme.zIndex.appBar - 1,
+                  }}
+                >
+                  <MegaMenuContainer>
+                    <DesktopMegaMenu items={item.submenu} closeMenu={closeMenu} />
+                  </MegaMenuContainer>
+                </Collapse>
               ))}
             </Box>
 
-            <IconButton
-              onClick={toggleDrawer(true)}
-              sx={{ display: { lg: 'none' } }}
-            >
-              <MenuIcon />
-            </IconButton>
+            {/* Кнопка мобильного меню и другие элементы для мобильных устройств */}
+            <Box sx={{ display: { xs: 'flex', lg: 'none' }, alignItems: 'center', gap: 1 }}>
+              <IconButton
+                component={Link}
+                href="/zapis-na-priem"
+                color="primary"
+                size="large"
+                sx={{ display: { xs: 'none', sm: 'inline-flex' } }}
+              >
+                <PhoneIcon />
+              </IconButton>
+              <IconButton
+                onClick={toggleDrawer(true)}
+                color="primary"
+                size="large"
+              >
+                <MenuIcon />
+              </IconButton>
+            </Box>
           </Toolbar>
         </Container>
       </AppBar>
 
+      {/* Мобильное меню (Drawer) */}
       <Drawer
         anchor="right"
         open={mobileOpen}
         onClose={toggleDrawer(false)}
-        PaperProps={{ sx: { width: '85vw', maxWidth: 320, pt: 10, px: 2 } }}
+        PaperProps={{ sx: { width: '85vw', maxWidth: 360, pt: 2, px: 1 } }}
       >
-        <List>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', p: 2 }}>
+          <Typography variant="h6" color="primary" fontWeight={700}>Меню</Typography>
+          <IconButton onClick={toggleDrawer(false)}>
+            <MenuIcon />
+          </IconButton>
+        </Box>
+        <Divider />
+        <List sx={{ px: 1, pt: 2 }}>
           {menuData.map((item) => (
-            <MobileMenuItem key={item.title} item={item} />
+            <MobileMenuItem key={item.title} item={item} toggleDrawer={toggleDrawer} />
           ))}
         </List>
+        <Box sx={{ p: 2, mt: 'auto' }}>
+          <Button
+            component={Link}
+            href="/zapis-na-priem"
+            variant="contained"
+            fullWidth
+            size="large"
+            startIcon={<PhoneIcon />}
+            sx={{ mb: 2 }}
+          >
+            Записаться на приём
+          </Button>
+          <Typography variant="body2" color="text.secondary" align="center">
+            © ГКБ №7. Все права защищены.
+          </Typography>
+        </Box>
       </Drawer>
     </>
   );
