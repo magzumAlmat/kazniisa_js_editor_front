@@ -175,21 +175,51 @@ const menuData = [
 
 
 
-
-  {
-    title: "Отделения",
-    path: "/otdeleniya",
+{
+    title: "Государственные услуги",
+    path: "/gosuslugi",
     submenu: [
-      { title: "Приёмный покой", path: "/otdeleniya/priemnyy-pokoy" },
-      { title: "Хирургия", path: "/otdeleniya/hirurgiya" },
-      { title: "Урология", path: "/otdeleniya/urologiya" },
-      { title: "Травматология", path: "/otdeleniya/travmatologiya" },
-      { title: "Реанимация", path: "/otdeleniya/reanimaciya" },
+      { title: "Реестр государственных услуг", path: "/gosuslugi/reestr" },
+      { title: "Нормативно-правовые акты", path: "/gosuslugi/normativy" },
+      { title: "Порядок обжалования", path: "/gosuslugi/obzhalovanie" },
+      { title: "Информационные материалы", path: "/gosuslugi/materialy" },
+      { title: "Отчет по оказанным государственным услугам", path: "/gosuslugi/otchet" },
     ]
   },
-  { title: "Услуги", path: "/uslugi" },
-  { title: "Специалисты", path: "/specialisty" },
-  { title: "Новости", path: "/novosti" },
+  {
+    title: "Корп. управ",
+    path: "/korp-uprav",
+    submenu: [
+      { title: "Наблюдательный совет", path: "/korp-uprav/nablyudatelnyy-sovet" },
+      { title: "Корпоративные документы", path: "/korp-uprav/dokumenty" },
+    ]
+  },
+  {
+    title: "Государственные символы",
+    path: "/gos-simvoly",
+    submenu: [
+      { title: "Государственный Флаг", path: "/gos-simvoly/flag" },
+      { title: "Государственный Герб", path: "/gos-simvoly/gerb" },
+      { title: "Государственный Гимн", path: "/gos-simvoly/gimn" },
+    ]
+  },
+  {
+    title: "Закупки",
+    path: "/zakupki",
+    submenu: [
+      { title: "Годовой план Государственных закупок", path: "/zakupki/godovoy-plan" },
+      { title: "Объявления", path: "/zakupki/obyavleniya" },
+      { title: "Протоколы", path: "/zakupki/protokoly" },
+    ]
+  },
+  {
+    title: "Гостевая",
+    path: "/gostevaya",
+    submenu: [
+      { title: "Вопрос-ответ", path: "/gostevaya/vopros-otvet" },
+      { title: "Благодарности", path: "/gostevaya/blagodarnosti" },
+    ]
+  },
   { title: "Контакты", path: "/kontakty" },
 ];
 
