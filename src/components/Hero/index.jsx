@@ -166,7 +166,7 @@
 //         </Typography>
 //         <ImageList variant="quilted" cols={4} rowHeight={160} gap={12} sx={{ borderRadius: 2, overflow: 'hidden', bgcolor: 'background.paper', p: 1, boxShadow: 1, mb: 8 }}>
 //           {photos.map((item) => (
-//             <ImageListItem key={item.img} cols={item.cols || 1} rows={item.rows || 1}>
+//             <ImageListItem key={item.title} cols={item.cols || 1} rows={item.rows || 1}>
 //               <Box
 //                 component="img"
 //                 {...srcset(item.img, 160, item.rows, item.cols)}
@@ -703,7 +703,7 @@ export default function Hero() {
               { img: '/api/placeholder/400/300', title: 'Специалисты', cols: 2 },
               { img: '/api/placeholder/400/300', title: 'Пациенты', rows: 2, cols: 2 },
             ].map((item) => (
-              <ImageListItem key={item.img} cols={item.cols || 1} rows={item.rows || 1}>
+              <ImageListItem key={item.title} cols={item.cols || 1} rows={item.rows || 1}>
                 <Box
                   component="img"
                   {...srcset(item.img, 160, item.rows, item.cols)}

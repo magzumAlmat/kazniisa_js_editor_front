@@ -19,6 +19,7 @@ const ProjectDetails = dynamic(() => import('../../components/projectdetails'), 
 import jwt_decode from "jwt-decode";
 
 export default function page() {
+  
   const allUserProjects = useSelector((state) => state.auth.allProjects);
   const currentUser = useSelector((state) => state.auth.currentUser);
   const dispatch = useDispatch();
@@ -27,8 +28,20 @@ export default function page() {
   const [selectedProjectId, setSelectedProjectId] = useState(null);
   const [decoded, setDecoded] = useState(null);
 
-  const router=useRouter()
+
   console.log(decoded);
+
+  const router = useRouter();
+
+  useEffect(() => {
+    // Проверяем токен при загрузке
+    const token = localStorage.getItem("token");
+    if (!token) {
+      router.push("/"); // Перенаправляем на логин
+    }
+  }, [router]);
+
+
 
   const handleProjectClick = (projectId) => {
     setSelectedProjectId(projectId);

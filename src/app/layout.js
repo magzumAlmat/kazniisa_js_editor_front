@@ -23,7 +23,7 @@
 
 // export default function RootLayout({ children }) {
 //   return (
-//     <html lang="ru">
+//     <html lang="ru" suppressHydrationWarning={true}>
 //       <body>
      
 //         <ThemeProvider
@@ -91,7 +91,7 @@ import { ThemeProvider } from "next-themes";
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="ru">
+    <html lang="ru" suppressHydrationWarning={true}>
       <body>
         {/* CssBaseline сбрасывает CSS и применяет базовые стили MUI */}
         <CssBaseline /> 
