@@ -264,7 +264,7 @@
 
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import {
   Box, Container, Typography, Button, Stack, Grid, Card, CardContent,
   IconButton, Paper, Chip, useTheme, alpha, ImageList, ImageListItem,
@@ -293,6 +293,63 @@ const InfographicCard = styled(Paper)(({ theme }) => ({
   },
 }));
 
+const StatCard = styled(Paper)(({ theme }) => ({
+  padding: theme.spacing(4),
+  textAlign: 'center',
+  borderRadius: theme.shape.borderRadius * 3,
+  background: 'linear-gradient(135deg, #ffffff 0%, #f8faff 100%)',
+  border: `1px solid ${alpha(theme.palette.primary.main, 0.1)}`,
+  transition: 'all 0.4s ease',
+  '&:hover': {
+    transform: 'translateY(-12px)',
+    boxShadow: '0 20px 40px rgba(0,94,184,0.15)',
+  },
+}));
+
+const FeatureCard = styled(Card)(({ theme }) => ({
+  height: '100%',
+  borderRadius: theme.shape.borderRadius * 3,
+  border: `1px solid ${theme.palette.divider}`,
+  transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+  '&:hover': {
+    borderColor: theme.palette.primary.main,
+    boxShadow: '0 15px 35px rgba(0,94,184,0.12)',
+    transform: 'translateY(-8px)',
+  },
+}));
+
+function AnimatedCounter({ end, suffix = "", duration = 2000 }) {
+  const [count, setCount] = useState(0);
+  const ref = useRef(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          let start = 0;
+          const increment = end / (duration / 16);
+          const timer = setInterval(() => {
+            start += increment;
+            if (start >= end) {
+              setCount(end);
+              clearInterval(timer);
+            } else {
+              setCount(Math.floor(start));
+            }
+          }, 16);
+          return () => clearInterval(timer);
+        }
+      },
+      { threshold: 0.5 }
+    );
+
+    if (ref.current) observer.observe(ref.current);
+    return () => observer.disconnect();
+  }, [end, duration]);
+
+  return <span ref={ref}>{count}{suffix}</span>;
+}
+
 // Стилизованный слайдер
 const HeroSlider = styled(Box)(({ theme }) => ({
   position: 'relative',
@@ -304,11 +361,22 @@ const HeroSlider = styled(Box)(({ theme }) => ({
 }));
 
 // === 2. ДАННЫЕ ===
-
 const slides = [
-  { title: "Современное оборудование позволяет проводить максимально точные исследования.", text: "Подробнее о наших специалистах и технике...", image: '/api/placeholder/1200/650' },
-  { title: "Клинико-лабораторные исследования", text: "Химические, микроскопические и другие исследования крови, выделений и патологических веществ.", image: '/api/placeholder/1200/650' },
-  { title: "Лапароскопия – минимально инвазивная хирургия", text: "Операции через точечные проколы без широких разрезов.", image: '/api/placeholder/1200/650' },
+  { 
+    title: "Лапароскопия — операции через точечные проколы", 
+    text: "Лапароскопия – это метод оперативного лечения заболеваний, при котором оперативные вмешательства различного объема выполняют без широкого рассечения кожных покровов и мышечных тканей, через точечные проколы.", 
+    image: '/images/slides/slider1.jpg' 
+  },
+  { 
+    title: "Клинико-лабораторные исследования", 
+    text: "К клинико-лабораторным исследованиям относятся химические, микроскопические и другие исследования человеческих выделений, крови и патологических веществ, образующихся в организме.", 
+    image: '/images/slides/slider2.jpg' 
+  },
+  { 
+    title: "Реабилитация с первого дня после операции", 
+    text: "В отделении ортохирургии реабилитацию механотерапией начинают проводить на 1-й день после операции. С помощью высокотехнологичных операций решаются многие проблемы опорно-двигательного аппарата.", 
+    image: '/images/slides/slider3.jpg' 
+  },
 ];
 
 // Новые данные для инфографики (Счетчики)
@@ -337,10 +405,18 @@ function srcset(image, size, rows = 1, cols = 1) {
 
 // === 4. ГЛАВНЫЙ КОМПОНЕНТ HERO ===
 
+const stats = [
+  { end: 10, suffix: "+", label: "Лет опыта", icon: <AssignmentInd /> },
+  { end: 500, suffix: "+", label: "Операций в год", icon: <TrendingUp /> },
+  { end: 98, suffix: "%", label: "Довольных пациентов", icon: <FavoriteBorder /> },
+  { end: 24, suffix: "/7", label: "Экстренная помощь", icon: <AccessTime /> },
+];
+
 export default function Hero() {
   const theme = useTheme();
   const [slide, setSlide] = useState(0);
 
+  
   useEffect(() => {
     const timer = setInterval(() => {
       setSlide((prev) => (prev + 1) % slides.length);
@@ -356,75 +432,189 @@ export default function Hero() {
       <Container maxWidth="xl">
 
         {/* === СЛАЙДЕР (HERO SECTION) === */}
-        <HeroSlider sx={{ height: { xs: 450, sm: 550, md: 650 } }}>
-          {slides.map((item, index) => (
-            <Box
-              key={index}
-              sx={{
-                position: 'absolute',
-                inset: 0,
-                opacity: index === slide ? 1 : 0,
-                transition: 'opacity 1s ease-in-out',
-                backgroundImage: `url(${item.image})`,
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-              }}
-            >
-              {/* Градиентное наложение для читаемости текста */}
-              <Box sx={{ position: 'absolute', inset: 0, bgcolor: 'linear-gradient(90deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.1) 100%)' }} />
+       <HeroSlider sx={{ height: { xs: 450, sm: 550, md: 650 } }}>
+  {slides.map((item, index) => (
+    <Box
+      key={index}
+      sx={{
+        position: 'absolute',
+        inset: 0,
+        opacity: index === slide ? 1 : 0,
+        transition: 'opacity 1s ease-in-out',
+        backgroundImage: `url(${item.image})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+      }}
+    >
+      {/* ТОЛЬКО ЛЁГКИЙ градиент по всему слайду (для красоты) */}
+      <Box sx={{ 
+        position: 'absolute', 
+        inset: 0, 
+        bgcolor: 'linear-gradient(90deg, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.2) 50%, transparent 100%)' 
+      }} />
 
-              <Container maxWidth="lg" sx={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center' }}>
-                <Box sx={{ color: 'white', maxWidth: 700, p: { xs: 3, md: 0 } }}>
-                  <Typography variant="h2" component="h1" sx={{ fontWeight: 700, mb: 2, fontSize: { xs: '2.5rem', sm: '3rem', md: '4rem' }, lineHeight: 1.2 }}>
-                    {item.title}
-                  </Typography>
-                  <Typography variant="h6" sx={{ mb: 4, opacity: 0.95, fontSize: { xs: '1.1rem', md: '1.3rem' }, lineHeight: 1.6 }}>
-                    {item.text}
-                  </Typography>
-                  <Button component={Link} href="/zapis-na-priem" variant="contained" size="large" startIcon={<LocalHospital />}
-                    sx={{
-                      bgcolor: 'secondary.main', color: 'white', px: { xs: 4, md: 6 }, py: 1.8,
-                      borderRadius: 3, fontWeight: 700, fontSize: '1.1rem', textTransform: 'none',
-                      boxShadow: theme.shadows[5], transition: 'all 0.3s ease',
-                      '&:hover': { bgcolor: 'secondary.dark', boxShadow: theme.shadows[8] }
-                    }}>
-                    Записаться на приём
-                  </Button>
-                </Box>
-              </Container>
-            </Box>
-          ))}
+      {/* КОНТРАСТНАЯ ПОДЛОЖКА ПОД ТЕКСТ */}
+      <Box sx={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: { xs: 0, md: '40%' }, // на мобильных — весь экран, на десктопе — только левая часть
+        bottom: 0,
+        bgcolor: 'rgba(0, 0, 0, 0.65)',
+        backdropFilter: 'blur(2px)',
+        borderRight: { md: '80px solid transparent' }, // красивая диагональная грань
+        clipPath: { md: 'polygon(0 0, 90% 0, 75% 100%, 0 100%)' }, // диагональный срез
+      }} />
 
-          {/* Навигационные кнопки */}
-          <IconButton onClick={prevSlide} sx={{ position: 'absolute', left: 0, top: '50%', transform: 'translateY(-50%)', bgcolor: 'rgba(0,0,0,0.5)', color: 'white', '&:hover': { bgcolor: 'rgba(0,0,0,0.7)' }, zIndex: 10, m: 2 }} size="large">
-            <ChevronLeft sx={{ fontSize: 40 }} />
-          </IconButton>
-          <IconButton onClick={nextSlide} sx={{ position: 'absolute', right: 0, top: '50%', transform: 'translateY(-50%)', bgcolor: 'rgba(0,0,0,0.5)', color: 'white', '&:hover': { bgcolor: 'rgba(0,0,0,0.7)' }, zIndex: 10, m: 2 }} size="large">
-            <ChevronRight sx={{ fontSize: 40 }} />
-          </IconButton>
+      <Container maxWidth="lg" sx={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', zIndex: 2 }}>
+        <Box sx={{ 
+          color: 'white', 
+          maxWidth: 700, 
+          p: { xs: 3, md: 5 },
+          textShadow: '2px 2px 8px rgba(0,0,0,0.8)',
+        }}>
+          <Typography 
+            variant="h2" 
+            component="h1" 
+            sx={{ 
+              fontWeight: 800, 
+              mb: 3, 
+              fontSize: { xs: '2.4rem', sm: '3.2rem', md: '4.2rem' }, 
+              lineHeight: 1.15,
+              letterSpacing: '-0.5px'
+            }}
+          >
+            {item.title}
+          </Typography>
+          
+          <Typography 
+            variant="body1" 
+            sx={{ 
+              mb: 5, 
+              opacity: 0.95, 
+              fontSize: { xs: '1.05rem', md: '1.25rem' }, 
+              lineHeight: 1.7,
+              maxWidth: 650
+            }}
+          >
+            {item.text}
+          </Typography>
 
-          {/* Индикаторы слайдов */}
-          <Stack direction="row" spacing={1} sx={{ position: 'absolute', bottom: 32, left: '50%', transform: 'translateX(-50%)', zIndex: 10 }}>
-            {slides.map((_, i) => (
-              <Box key={i} onClick={() => setSlide(i)} sx={{ width: i === slide ? 36 : 12, height: 12, borderRadius: 6, bgcolor: i === slide ? 'white' : 'rgba(255,255,255,0.5)', cursor: 'pointer', transition: 'all 0.3s ease' }} />
-            ))}
-          </Stack>
-        </HeroSlider>
+          {/* КНОПКА С ЯРКИМ АКЦЕНТОМ */}
+          <Button 
+            component={Link} 
+            href="/zapis-na-priem" 
+            variant="contained" 
+            size="large" 
+            startIcon={<LocalHospital />}
+            sx={{
+              bgcolor: '#9C27B0', // яркий фиолетовый как на вашем скриншоте
+              color: 'white', 
+              px: { xs: 5, md: 7 }, 
+              py: 2,
+              borderRadius: 4,
+              fontWeight: 700, 
+              fontSize: '1.15rem', 
+              textTransform: 'none',
+              boxShadow: '0 8px 25px rgba(156, 39, 176, 0.4)',
+              transition: 'all 0.3s ease',
+              '&:hover': { 
+                bgcolor: '#7B1FA2', 
+                boxShadow: '0 12px 35px rgba(156, 39, 176, 0.5)',
+                transform: 'translateY(-3px)'
+              }
+            }}
+          >
+            Записаться на приём
+          </Button>
+        </Box>
+      </Container>
+    </Box>
+  ))}
+
+  {/* СТРЕЛКИ — сделали более современными */}
+  <IconButton 
+    onClick={prevSlide} 
+    sx={{ 
+      position: 'absolute', 
+      left: { xs: 8, md: 24 }, 
+      top: '50%', 
+      transform: 'translateY(-50%)', 
+      bgcolor: 'rgba(255,255,255,0.25)', 
+      backdropFilter: 'blur(10px)',
+      color: 'white', 
+      '&:hover': { bgcolor: 'rgba(255,255,255,0.4)' }, 
+      zIndex: 10 
+    }} 
+    size="large"
+  >
+    <ChevronLeft sx={{ fontSize: 42 }} />
+  </IconButton>
+
+  <IconButton 
+    onClick={nextSlide} 
+    sx={{ 
+      position: 'absolute', 
+      right: { xs: 8, md: 24 }, 
+      top: '50%', 
+      transform: 'translateY(-50%)', 
+      bgcolor: 'rgba(255,255,255,0.25)', 
+      backdropFilter: 'blur(10px)',
+      color: 'white', 
+      '&:hover': { bgcolor: 'rgba(255,255,255,0.4)' }, 
+      zIndex: 10 
+    }} 
+    size="large"
+  >
+    <ChevronRight sx={{ fontSize: 42 }} />
+  </IconButton>
+
+  {/* ТОЧКИ — чуть крупнее и красивее */}
+  <Stack 
+    direction="row" 
+    spacing={1.5} 
+    sx={{ 
+      position: 'absolute', 
+      bottom: { xs: 20, md: 32 }, 
+      left: '50%', 
+      transform: 'translateX(-50%)', 
+      zIndex: 10 
+    }}
+  >
+    {slides.map((_, i) => (
+      <Box 
+        key={i} 
+        onClick={() => setSlide(i)} 
+        sx={{ 
+          width: i === slide ? 42 : 14, 
+          height: 14, 
+          borderRadius: 7, 
+          bgcolor: i === slide ? 'white' : 'rgba(255,255,255,0.5)', 
+          cursor: 'pointer', 
+          transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+          boxShadow: i === slide ? '0 0 20px rgba(255,255,255,0.6)' : 'none'
+        }} 
+      />
+    ))}
+  </Stack>
+</HeroSlider>
 
         {/* === ИНФОГРАФИКА (СЧЕТЧИКИ) === */}
-        <Box sx={{ mt: -15, mb: 10, position: 'relative', zIndex: 5 }}>
-          <Grid container spacing={3}>
-            {infographicData.map((item, i) => (
-              <Grid item xs={12} sm={6} md={3} key={i}>
-                <InfographicCard elevation={3} sx={{ bgcolor: 'background.paper' }}>
-                  <Box sx={{ color: 'primary.main', mb: 1 }}>{item.icon}</Box>
-                  <Typography variant="h3" sx={{ fontWeight: 800, color: 'primary.dark', mb: 0.5 }}>
-                    {item.value}
+         <Box sx={{ mt: { xs: -8, md: -10 }, mb: { xs: 8, md: 12 }, position: 'relative', zIndex: 10 }}>
+          <Grid container spacing={{ xs: 3, md: 4 }}>
+            {stats.map((stat, i) => (
+              <Grid item xs={6} md={3} key={i}>
+                <StatCard elevation={0}>
+                  <Box sx={{ color: 'primary.main', mb: 2, '& svg': { fontSize: 48 } }}>
+                    {stat.icon}
+                  </Box>
+                  <Typography variant="h3" sx={{ fontWeight: 800, color: 'primary.dark' }}>
+                    <AnimatedCounter end={stat.end} suffix={stat.suffix} />
                   </Typography>
-                  <Typography variant="subtitle1" color="text.secondary" sx={{ fontWeight: 600 }}>
-                    {item.label}
+                  <Typography variant="subtitle1" sx={{ fontWeight: 600, color: 'text.secondary', mt: 1 }}>
+                    {stat.label}
                   </Typography>
-                </InfographicCard>
+                </StatCard>
               </Grid>
             ))}
           </Grid>

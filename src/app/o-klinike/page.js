@@ -5,6 +5,7 @@ import { LocalHospital, PeopleAlt, Science, Settings, School, TrendingUp } from 
 import React from 'react';
 import MuiLink from '@mui/material/Link';
 import Link from 'next/link';
+
 export default function OKlinikePage() {
   // OKlinikeStrukturaKlinikiPage.js - Улучшенный UI/UX с инфографикой
 
@@ -46,7 +47,7 @@ const MetricCard = ({ value, label, icon }) => {
   const theme = useTheme();
   
   // Текст, извлеченный из 1.rtf
-  const mainText = `
+  const mainText =`
     Городская клиническая больница №7 г.Алматы сегодня по праву считается одним из самых крупных лечебных учреждений не только города, но и всей страны. Знаменитая семерка является ровесницей Независимости Казахстана – именно в 1991 году клиника открыла свои двери для пациентов, которым требуется неотложная медицинская помощь.
     <br/>
     
@@ -58,6 +59,17 @@ const MetricCard = ({ value, label, icon }) => {
     <br/>
     ГКБ № 7 демонстрирует организацию оказания медицинской помощи на уровне лучших больниц страны, используя достижения в области новых технологий и вычислительной техники и оказывая качественную и доступную медицинскую помощь. В соответствии с международными стандартами в стационаре проведен ряд мероприятий по модернизации информационной системы сектора здравоохранения с внедрением новых и передовых технологий. Произведено оснащение больницы новым оборудованием для диагностики и лечения различных патологий на современном уровне. Определены меры по организации постоянного повышения квалификации специалистов, проведению научных семинаров и конференций с привлечением ведущих зарубежных специалистов.
   `;
+
+
+  const parseParagraphs = (text) => {
+  return text
+    .replace(/<br\s*\/?>/gi, '\n') // заменяем <br/> на \n
+    .split(/\n+/)                 // делим по одному или нескольким \n
+    .map(p => p.trim())
+    .filter(p => p.length > 0);   // убираем пустые строки
+};
+
+const paragraphs = parseParagraphs(mainText);
 
   return (
     <Container maxWidth="lg" sx={{ py: 5 }}>
@@ -81,11 +93,21 @@ const MetricCard = ({ value, label, icon }) => {
 
       {/* Основной текст о клинике */}
       <Box sx={{ mb: 8 }}>
-        {mainText.split('\n\n').map((paragraph, index) => (
+        {/* {mainText.split('\n\n \br\br').map((paragraph, index) => (
           <Typography key={index} variant="body1" paragraph sx={{ lineHeight: 1.8, color: 'text.primary' }}>
             {paragraph.trim()}
           </Typography>
-        ))}
+        ))} */}
+        {paragraphs.map((paragraph, index) => (
+        <Typography
+          key={index}
+          variant="body1"
+          paragraph
+          sx={{ lineHeight: 1.8, color: 'text.primary' }}
+        >
+          {paragraph}
+        </Typography>
+      ))}
       </Box>
 
       <Divider sx={{ my: 5 }} />

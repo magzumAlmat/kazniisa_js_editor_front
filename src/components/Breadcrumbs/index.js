@@ -24,9 +24,7 @@ export default function BasicBreadcrumbs() {
 
   return (
     <Breadcrumbs aria-label="breadcrumb">
-      <Link underline="hover" color="inherit" href="/">
-        Главная
-      </Link>
+      
       {pathnames.map((value, index) => {
         const last = index === pathnames.length - 1;
         const to = `/${pathnames.slice(0, index + 1).join('/')}`;
